@@ -1,0 +1,154 @@
+- Positioning Schemes
+    - Absolute Positioning
+        - As a distance from each side + a target size + a justification mode per axis (start, end, center, stretched)
+    - Flexbox
+        - Puts items in a row
+        - Option to wrap across multiple lines
+        - If items take too much or too little space, they may be compressed or stretched on a per-item basis
+        - Per-line justification (start, end, centered, stretched, space between / around)
+    - Grid
+        - defines a number of columns and rows
+        - items are laid into rectangular regions, i.e. cover a certain set of grid cells
+    - Masonry
+        - Multiple tracks that get filled evenly with content
+    - Gaps
+        - Between items in grids, flexboxes and masonry layouts
+        - Can have lines in them
+    - Floats
+        - Figures and asides that text wraps around (think Wikipedia info box)
+        - Might have odd shapes
+    - Anchored
+        - Positioned absolutely, but anchored to something else (think select box dropdown or hover tooltips)
+
+- Text
+    - Justification (start, end, centered, justified)
+        - Last line in justified paragraph might not want to be justified
+    - Line Wrapping
+        - Hyphenation
+        - Runts (Word alone on an entire line) are to be avoided
+    - Text Effects (bold, italics, underline, strikethrough)
+    - Inline Wrappers (think single-line code blocks, can break across lines)
+    - Ruby Text (called furigana in japanese)
+    - Line Height (distance between lines)
+        - Should leave space for diacritics
+        - Needs to leave space for ruby text
+    - BiDi Reordering (see UAX#9)
+    - Vertical Writing Modes
+        - Rotated vs Translated (English gets rotated 90° when sideways, Japanese/Chinese are stacked vertically without
+          rotation)
+        - Short bits of horizontal text in vertical writing (done for numbers in Japanese vertical writing as opposed to
+          stacking digits)
+        - Left-to-right, Right-to-left, Top-to-bottom, Bottom-to-top
+    - Outlines
+    - Monospace vs Proportional text
+    - Kerning / Letter Spacing
+    - Might want to flow into or around odd shapes (floats, absolutely positioned items)
+    - Auto-Ellipsis as alternative to overflow/scroll when not enough space
+    - Rendering-only transformations
+        - All Caps
+        - All Lowercase
+        - Small Caps
+        - Title Case(?)
+
+- Scroll Containers
+    - Scrollbar(s)
+        - Customizeable
+        - Backwards button > Track > Forwards button
+        - Infinite Scroll Indicator (CSS does not have this!)
+    - Managed via Wheel vs Touch Flinging
+    - Clamping of Elements (think table headers that stay on screen)
+    - Virtual Scrolling
+    - Infinite Scrolling
+    - Scroll Snapping (think carousel layout = scroll is only allowed to stop at specific points)
+        - Needs different considerations for continuous (touch) scroll inputs and discrete (mouse) scroll inputs
+    - A scroll that starts in a nested scroll container should not start scrolling the parent just because the child hit
+      the end. (User should have to stop and re-start a new scroll for that to happen)
+    - Anchor to something in view instead of an absolute offset so that when prior off-screen content changes, the view
+      doesn't jump around
+
+- Modals / Popups
+    - Everything behind them might be inert (non-interactive)
+    - Probably in 3D space in VR
+    - Has a backdrop to gray/blur out everything behind (see Filter Effects)
+
+- Tooltips
+
+- Reusable Components / Templates
+    - Filled with data
+
+- Responsiveness
+    - UI adapts to different screen sizes (4K vs 1080p etc.)
+    - UI adapts to different screen aspect ratios (portrait, landscape, 4x3)
+    - UI adapts to available forms of input (buttons need to be bigger on touch screens, might apply to VR as well)
+
+- Clipping
+    - Done by Scroll Containers
+
+- Box Decorations
+    - Backgrounds
+        - Solid Color, Repeating, Stretched, 9-sliced
+        - Drawn at some scale
+    - Borders
+        - Solid, Double-Lines, Inset, Outset, Dashed, 9-sliced
+        - Have a thickness
+        - Radius
+
+- Interaction
+    - Hit Testing (also needed for text selections)
+    - Hover / Active styling
+    - Input / Form Validation
+    - Disabled Input Fields
+    - Resize Handles / Resizeable Areas
+    - Pointer Capture (when starting a click on a slider, all further UI events for that click should be dispatched to
+      the slider, irregardless of actual mouse position)
+    - Maybe Shortcut Highlighting in dropdown menus and such
+
+- Units
+    - Consider DPI and how to avoid shrinking to nothing on a 4K screen
+    - Font-Relative Units
+    - Ancestor-Relative Units (generalized form of percentages)
+
+- Logical vs Phsyical Sides
+    - Top/Bottom/Left/Right vs BlockStart/BlockEnd/InlineStart/InlineEnd
+    - Important when Adjusting UI for Right-to-Left Languages (think Wikipedia Info box that floats left for English,
+      but right for Arabic)
+
+- Filter Effects
+    - Drop Shadows, blurs, etc...
+    - Filters that apply to anything behind an item
+
+- Reactivity (How do changes in the data model turn into changes to the UI? Writing that manually is annoying.)
+
+- Windows / Panels
+    - Popups in-front of existing panel
+    - Auxilliary Panels (docked to / moving with main panel)
+    - Pinned to User vs Pinned to World
+
+- Animations
+    - Loading Bars / Spinners
+    - Transitions
+    - Entry / Exit Animations
+
+- Automatic List Numbering
+
+- Fragmentation
+    - Laying UI elements across regions (pages, columns...)
+    - Page/Region breaks before/after certain items (think MS Word)
+    - No cutting text or images in half
+    - Widows / Orphans (lone lines of a paragraph at the beginning or end of a region) are to be avoided
+
+- Pagination
+    - Content is fragmented across pages
+    - Might have generated content such as page numbers / headers (think book with chapter name in top left)
+
+- Columns / Regions
+    - Content is fragmented across multiple columns or otherwise defined regions (think newspapers)
+
+- Accessibility
+    - Tree that specifies structural roles of the UI
+    - Informs screen readers of things like buttons, lists, input fields, progress bars, modals, menus, sections...
+    - Images might need accessible descriptions that can be read out
+    - Keyboard-Only Use
+        - Consistent tab order
+            - Should make visual sense
+            - Should match screen reader order
