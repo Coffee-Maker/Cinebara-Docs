@@ -4,6 +4,8 @@ url: coffee-maker.github.io/Cinebara-Docs
 branding:
   title: Cinebara
   label: Docs
+exclude:
+  - "README.md"
 # links:
   # - text: Home
   #   link: https://coffee-maker.github.io/Cinebara-Docs/
