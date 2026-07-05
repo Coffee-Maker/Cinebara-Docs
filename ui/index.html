@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta name="turbo-root" content="/Cinebara-Docs">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.836608142446">
+
+    <!-- See retype.com -->
+    <meta name="generator" content="Retype 4.6.0">
+
+    <!-- Primary Meta Tags -->
+    <title>Core Observations</title>
+    <meta name="title" content="Core Observations">
+    <meta name="description" content="In many different UI layouts, items are placed side-by-side and then distributed and aligned in some manner. For this layout system, we have constructed some generic primitives that accomplish this and are used by all layout modes, to handle these common behaviors in a unified way.">
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://coffee-maker.github.io/Cinebara-Docs/ui/">
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="https://coffee-maker.github.io/Cinebara-Docs/sitemap.xml">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://coffee-maker.github.io/Cinebara-Docs/ui/">
+    <meta property="og:title" content="Core Observations">
+    <meta property="og:description" content="In many different UI layouts, items are placed side-by-side and then distributed and aligned in some manner. For this layout system, we have constructed some generic primitives that accomplish this and are used by all layout modes, to handle these common behaviors in a unified way.">
+    <meta property="og:image" content="https://coffee-maker.github.io/Cinebara-Docs/ui/images/writing_direction.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Core Observations">
+    <meta property="og:site_name" content="Cinebara">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://coffee-maker.github.io/Cinebara-Docs/ui/">
+    <meta name="twitter:title" content="Core Observations">
+    <meta name="twitter:description" content="In many different UI layouts, items are placed side-by-side and then distributed and aligned in some manner. For this layout system, we have constructed some generic primitives that accomplish this and are used by all layout modes, to handle these common behaviors in a unified way.">
+    <meta name="twitter:image" content="https://coffee-maker.github.io/Cinebara-Docs/ui/images/writing_direction.png">
+    <meta name="twitter:image:alt" content="Core Observations">
+
+    <!-- Alternate Markdown -->
+    <link rel="alternate" type="text/markdown" href="https://coffee-maker.github.io/Cinebara-Docs/ui/ui.md">
+
+    <script data-cfasync="false">(function(){var cl=document.documentElement.classList,ls=localStorage.getItem("retype_scheme"),hd=cl.contains("dark"),hl=cl.contains("light"),wm=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(ls==="dark"||(!ls&&wm&&!hd&&!hl)){cl.remove("light");cl.add("dark")}else if(ls==="light"||(!ls&&!wm&&!hd&&!hl)){cl.remove("dark");cl.add("light")}})();</script>
+
+    <link href="../resources/css/retype.css?v=4.6.0.836608142446" rel="stylesheet">
+
+    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.836608142446" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../resources/js/retype.js?v=4.6.0" data-turbo-eval="false" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.836608142446" data-turbo-eval="false" defer></script>
+</head>
+<body>
+    <div id="retype-app" class="relative text-base antialiased text-base-text bg-base-bg font-body">
+    <div class="absolute bottom-0 left-0" style="top: 5rem; right: 50%"></div>
+
+    <header id="retype-header" class="sticky top-0 z-30 flex w-full h-16 bg-header-bg border-b border-header-border md:h-20">
+        <div class="container relative flex items-center justify-between pr-6 grow md:justify-start">
+            <!-- Mobile menu button skeleton -->
+            <button v-cloak class="skeleton retype-mobile-menu-button flex items-center justify-center shrink-0 overflow-hidden dark:text-white focus:outline-hidden rounded-full w-10 h-10 ml-3.5 md:hidden"><svg xmlns="http://www.w3.org/2000/svg" class="mb-px shrink-0" width="24" height="24" viewBox="0 0 24 24" role="presentation" style="margin-bottom: 0px;"><g fill="currentColor"><path d="M2 4h20v2H2zM2 11h20v2H2zM2 18h20v2H2z"></path></g></svg></button>
+            <div v-cloak id="retype-sidebar-left-toggle-button"></div>
+    
+            <!-- Logo -->
+            <div class="flex items-center justify-between h-full py-2 md:w-75">
+                <div class="flex items-center px-2 md:px-6">
+                    <a id="retype-branding-logo" href="https://coffee-maker.github.io/Cinebara-Docs/" class="flex items-center leading-snug text-2xl">
+                        <span class="dark:text-white font-bold line-clamp-1 md:line-clamp-2">Cinebara</span>
+                    </a><span id="retype-branding-label" class="inline-flex mt-1 px-2 py-1 ml-4 text-xs font-medium leading-none items-center rounded-md bg-branding-label-bg text-branding-label-text ring-1 ring-branding-label-border ring-inset md:inline-block">Docs</span>
+                </div>
+    
+                <span class="hidden h-8 border-r md:inline-block border-base-border"></span>
+            </div>
+    
+            <div class="flex justify-between md:grow">
+                <!-- Top Nav -->
+                <nav id="retype-header-nav" class="hidden md:flex">
+                    <ul class="flex flex-col mb-4 md:pl-16 md:mb-0 md:flex-row md:items-center">
+                        
+                    </ul>
+                </nav>
+    
+                <div v-cloak class="flex justify-end grow">
+                    <div id="retype-mobile-search-button"></div>
+                    <doc-search-desktop></doc-search-desktop>
+    
+                    <doc-theme-switch class="lg:ml-2"></doc-theme-switch>
+                    <doc-history></doc-history>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <div id="retype-container" class="container relative flex bg-white">
+        <!-- Sidebar Skeleton -->
+        <div v-cloak class="fixed flex flex-col shrink-0 duration-300 ease-in-out bg-sidebar-left-bg border-sidebar-left-border sidebar top-20 w-75 border-r h-screen md:sticky transition-transform skeleton">
+        
+            <div class="flex items-center h-16 px-6">
+                <input id="retype-filter-input-mock" class="w-full h-10 pl-8 px-3 py-2 transition-colors duration-200 ease-linear bg-filter-bg border border-filter-border rounded-lg shadow-none md:text-sm hover:border-filter-border-hover focus:outline-hidden focus:border-filter-border-focus placeholder-filter-placeholder" type="text">
+            </div>
+        
+            <div class="pl-6 mt-1 mb-4">
+                <div class="w-32 h-3 mb-4 bg-skeleton-bg rounded-full loading"></div>
+                <div class="w-48 h-3 mb-4 bg-skeleton-bg rounded-full loading"></div>
+                <div class="w-40 h-3 mb-4 bg-skeleton-bg rounded-full loading"></div>
+                <div class="w-32 h-3 mb-4 bg-skeleton-bg rounded-full loading"></div>
+                <div class="w-48 h-3 mb-4 bg-skeleton-bg rounded-full loading"></div>
+                <div class="w-40 h-3 mb-4 bg-skeleton-bg rounded-full loading"></div>
+            </div>
+        
+            <div class="shrink-0 mt-auto bg-transparent dark:border-base-border">
+                <a class="flex items-center justify-center flex-nowrap h-16 text-gray-350 dark:text-dark-400 hover:text-gray-600 dark:hover:text-dark-300 transition-colors duration-150 ease-in docs-powered-by" target="_blank" href="https://retype.com/" rel="noopener">
+                    <span class="text-xs whitespace-nowrap">Powered by</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="ml-2" fill="currentColor" width="96" height="20" overflow="visible"><path d="M0 0v20h13.59V0H0zm11.15 17.54H2.44V2.46h8.71v15.08zM15.8 20h2.44V4.67L15.8 2.22zM20.45 6.89V20h2.44V9.34z"/><g><path d="M40.16 8.44c0 1.49-.59 2.45-1.75 2.88l2.34 3.32h-2.53l-2.04-2.96h-1.43v2.96h-2.06V5.36h3.5c1.43 0 2.46.24 3.07.73s.9 1.27.9 2.35zm-2.48 1.1c.26-.23.38-.59.38-1.09 0-.5-.13-.84-.4-1.03s-.73-.28-1.39-.28h-1.54v2.75h1.5c.72 0 1.2-.12 1.45-.35zM51.56 5.36V7.2h-4.59v1.91h4.13v1.76h-4.13v1.92h4.74v1.83h-6.79V5.36h6.64zM60.09 7.15v7.48h-2.06V7.15h-2.61V5.36h7.28v1.79h-2.61zM70.81 14.64h-2.06v-3.66l-3.19-5.61h2.23l1.99 3.45 1.99-3.45H74l-3.19 5.61v3.66zM83.99 6.19c.65.55.97 1.4.97 2.55s-.33 1.98-1 2.51-1.68.8-3.04.8h-1.23v2.59h-2.06V5.36h3.26c1.42 0 2.45.28 3.1.83zm-1.51 3.65c.25-.28.37-.69.37-1.22s-.16-.92-.48-1.14c-.32-.23-.82-.34-1.5-.34H79.7v3.12h1.38c.68 0 1.15-.14 1.4-.42zM95.85 5.36V7.2h-4.59v1.91h4.13v1.76h-4.13v1.92H96v1.83h-6.79V5.36h6.64z"/></g></svg>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Sidebar component -->
+        <doc-sidebar v-cloak>
+            <template #sidebar-footer>
+                <div class="shrink-0 mt-auto border-t md:bg-transparent md:border-none dark:border-base-border">
+        
+                    <a class="flex items-center justify-center flex-nowrap h-16 text-gray-350 dark:text-dark-400 hover:text-gray-600 dark:hover:text-dark-300 transition-colors duration-150 ease-in docs-powered-by" target="_blank" href="https://retype.com/" rel="noopener">
+                        <span class="text-xs whitespace-nowrap">Powered by</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="ml-2" fill="currentColor" width="96" height="20" overflow="visible"><path d="M0 0v20h13.59V0H0zm11.15 17.54H2.44V2.46h8.71v15.08zM15.8 20h2.44V4.67L15.8 2.22zM20.45 6.89V20h2.44V9.34z"/><g><path d="M40.16 8.44c0 1.49-.59 2.45-1.75 2.88l2.34 3.32h-2.53l-2.04-2.96h-1.43v2.96h-2.06V5.36h3.5c1.43 0 2.46.24 3.07.73s.9 1.27.9 2.35zm-2.48 1.1c.26-.23.38-.59.38-1.09 0-.5-.13-.84-.4-1.03s-.73-.28-1.39-.28h-1.54v2.75h1.5c.72 0 1.2-.12 1.45-.35zM51.56 5.36V7.2h-4.59v1.91h4.13v1.76h-4.13v1.92h4.74v1.83h-6.79V5.36h6.64zM60.09 7.15v7.48h-2.06V7.15h-2.61V5.36h7.28v1.79h-2.61zM70.81 14.64h-2.06v-3.66l-3.19-5.61h2.23l1.99 3.45 1.99-3.45H74l-3.19 5.61v3.66zM83.99 6.19c.65.55.97 1.4.97 2.55s-.33 1.98-1 2.51-1.68.8-3.04.8h-1.23v2.59h-2.06V5.36h3.26c1.42 0 2.45.28 3.1.83zm-1.51 3.65c.25-.28.37-.69.37-1.22s-.16-.92-.48-1.14c-.32-.23-.82-.34-1.5-.34H79.7v3.12h1.38c.68 0 1.15-.14 1.4-.42zM95.85 5.36V7.2h-4.59v1.91h4.13v1.76h-4.13v1.92H96v1.83h-6.79V5.36h6.64z"/></g></svg>
+                    </a>
+                </div>
+            </template>
+        </doc-sidebar>
+
+        <div class="grow min-w-0 bg-body-bg">
+            <!-- Render "toolbar" template here on api pages --><!-- Render page content -->
+<div class="flex">
+    <div id="retype-main" class="min-w-0 p-4 grow md:px-16">
+        <main class="relative pb-12 lg:pt-2">
+            <div class="relative retype-markdown" id="retype-content">
+                <!-- Rendered if sidebar right is enabled -->
+                <div id="retype-sidebar-right-toggle"></div>
+                <doc-page-actions></doc-page-actions>
+
+                <!-- Page content  -->
+<h1 id="core-observations">Core Observations</h1>
+<p>In many different UI layouts, items are placed side-by-side and then distributed and aligned in some manner.
+For this layout system, we have constructed some generic primitives that accomplish this and are used by all layout modes, to handle these common behaviors in a unified way.</p>
+<p>These primitives are racks and lines, which are used by all layout modes to achieve their goals.
+A rack is a one-dimensional concept responsible for distributing and aligning a set of items into some available space on an axis.
+A line generalizes how to treat an entire row of boxes as a single rack item.
+This can happen when aligning the rows in a flex layout, but is most common in grid layout, where entire rows and columns are treated as single rack items.</p>
+<h1 id="layout-modes">Layout Modes</h1>
+<p>Layout modes very roughly follow this logic:</p>
+<ol>
+<li>Distribute items via racks along the placement direction</li>
+<li>Run layout for the children now that their sizes in the placement-axis are determined</li>
+<li>Distribute items via racks in the wrapping direction.</li>
+</ol>
+<p>Before laying out a box, it may be of indefinite size along one or both axes. This indicates that the box&#x27;s own layout has infinite space available in these directions. After a box has been laid out, its size has been resolved to be definite on both axes. Note that at this point, the parent box might, during further distribution, squish the box back down to a smaller size. This will induce overflow.</p>
+<p>Imagine an absolutely positioned box that will stretch to fill the entire screen, in a right-to-left, top-to-bottom layout. It first gets a width from the absolute layout. Its own layout then runs, filling that given width and an indefinite height, which might end up larger than the screen. Now the absolute layout squishes this box back down to the size of the screen, and scrollbars appear.</p>
+<h1 id="directions">Directions</h1>
+<p>UI inherently exist in two dimensions, where it has a horizontal direction and a vertical direction. That said, for anything that will contain human text, it makes sense to conceptualize these as a primary and a secondary direction. English text has words going left to right, and if there is not enough space remaining, it wraps onto more lines, going downwards. We thus arrive at our terms for the X and Y axes: The placement direction and the wrapping direction.
+Every layout mode performs its layout according to these two directions.</p>
+<p>And while in English, these always correspond to the horizontal and vertical axes in the same way, this is not necessarily the case in other languages, such as Arabic or Mongolian. Arabic goes right to left, whereas Mongolian places text top to bottom.</p>
+<figure class="content-center">
+    <img src="images/writing_direction.png" alt="Various language's writing directions" class="max-w-full h-auto rounded-image-rounded border-image-border border-image-border-width" width="429" height="315" />
+    <figcaption class="caption">Various language's writing directions</figcaption>
+</figure>
+<p>In a UI system, it makes sense for these differences to be represented, even by things that are not text. Think of a menu bar, where the various options are placed left to right, from the most important to the least important. If the language were arabic, it would make sense, for these menu items to go the other direction as well.</p>
+<p>Thus, all layout modes operate on the placement and wrapping directions, which may map to the physical X and Y axes in various different ways:</p>
+<figure class="content-center">
+    <img src="images/layout_directions_2.png" alt="An alternative configuration of placement and wrapping directions" class="max-w-full h-auto rounded-image-rounded border-image-border border-image-border-width" width="452" height="280" />
+    <figcaption class="caption">An alternative configuration of placement and wrapping directions</figcaption>
+</figure>
+<figure class="content-center">
+    <img src="images/layout_directions_1.png" alt="A visualization of placement and wrapping directions" class="max-w-full h-auto rounded-image-rounded border-image-border border-image-border-width" width="452" height="292" />
+    <figcaption class="caption">A visualization of placement and wrapping directions</figcaption>
+</figure>
+<h1 id="root-layout">Root Layout</h1>
+<p>The root box positioned at an origin.
+It&#x27;s self alignment is used to determine how exactly it sits on the origin.
+This makes it possible to have boxes of indefinite size that are either centered on a point or grow into a certain direction. (or anything in-between)</p>
+<h1 id="absolute-layout">Absolute Layout</h1>
+<p>Absolute layout exists to position items absolutely, relative to their parent.
+Examples of this include centered modals, popups along the edges of a container and also draggable windows on a desktop.</p>
+<p>Absolute layout is performed as follows:</p>
+<ol>
+<li>
+<p>Place each child box in its own rack along the placement direction. (These racks also include collapsed end buffers.)</p>
+</li>
+<li>
+<p>Distribute all racks to determine their sizes.</p>
+</li>
+<li>
+<p>If the container does not have a placement axis size yet, its placement axis size is that of the largest rack.</p>
+</li>
+<li>
+<p>Lay out all child boxes.</p>
+</li>
+<li>
+<p>Place each child box in its own rack along the wrapping direction, using its laid-out size as the preferred size. (These racks also include collapsed end buffers.)</p>
+</li>
+<li>
+<p>Distribute the wrapping direction racks to determine their sizes.</p>
+</li>
+<li>
+<p>If the container does not have a wrapping axis size yet, its wrapping axis size is that of the largest wrapping axis rack.</p>
+</li>
+<li>
+<p>Clamp the container&#x27;s size up to its min size.</p>
+</li>
+<li>
+<p>Align all racks.</p>
+</li>
+</ol>
+<p>This means that the container will resolve indefinite sizes to be at least its min size and also always large enough to fit any item if that item were centered.
+Alignment may want to align items to be fully or partially outside of the container and this still allows for that.
+It also leaves enough space for those items to slide fully into view.</p>
+<h1 id="flex-layout">Flex Layout</h1>
+<p>Flex layout exists to lay out items into lines of content that may or may not be allowed to wrap.
+Examples of this include toolbars, lines of text, or stacks of messages in a chat history.</p>
+<h1 id="grid-layout">Grid Layout</h1>
+<p>Grid layout exists to position items in a grid-like arrangement.
+This is useful for tables and some general UI concepts.</p>
+<p>Grid layout is performed as follows:</p>
+<p>Note that any time that this algorithm &#x27;assigns&#x27; sizes to colunms, it does not add them to the rack item immediately. It just makes note of them for later use.</p>
+<ol>
+<li>
+<p>Assign child boxes to the grid&#x27;s cells. A box might span multiple cells, horizontally and vertically. TODO: How exactly?</p>
+</li>
+<li>
+<p>Create a rack for the placement direction. This rack has one item for each column, and their properties are determined by a line that consists of each box within that column. Boxes that span multiple colunms are not part of the lines.</p>
+</li>
+<li>
+<p>For each box that spans multiple columns:</p>
+<ol>
+<li>If the total min size of all columns that it spans and the gaps between them is less than the spanning box&#x27;s min size, make note of how much size is missing and proportionally assign it to all columns in question, based on their current sizes.
+Do not assign any additional min size to gaps.</li>
+</ol>
+</li>
+<li>
+<p>For each column, if any min size increases were assigned to it, add the largest of them.
+Iterate columns so that the columns with the largest available min size increases are processed first.
+Break ties using their second-largest available min size increase and so on. (A non-existant min size increase is smaller than one that does exist.)
+If there were any other, smaller min size increases assigned, re-run step 3 for the boxes that those smaller min size increases originated from.
+This procedure hopes to unify all desired min size increases in the least egregious way.
+If two spanning boxes need to increase a colunms size by different amounts, only the largest increase should be taken, which allows the other spanning box to assign less additional space elsewhere.
+One would not want to prioritize smaller min size increases, because this forces boxes that already need a lot of extra min size to take even more elsewhere.
+Whereas allowing the demanding spanners to perform their size increases first, might make further size increases for less demanding spanners entirely unnecessary.</p>
+</li>
+<li>
+<p>For each box that spans multiple columns:</p>
+<ol>
+<li>
+<p>If the total preferred size of all columns that it spans and the gaps between them is not equal to the spanning box&#x27;s preferred size, note how much size is missing.
+In this step, if an item has no preferred size, use its min size in the sum instead.
+Also use its min size if it exceeds its preferred size.
+This models the actual amount of space with which a column will enter the rack distribution algorithm, i.e. its effective preferred size.</p>
+</li>
+<li>
+<p>If that sum is less than the spanning box&#x27;s preferred size:</p>
+<ol>
+<li>Compute the difference and proportionally assign it to all columns in question, based on their current sizes.
+Do not assign any preferred sizes to gaps or items that already have a set preferred size.
+If this means that there is no items to assign this preferred size to, do not assign it at all.</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>
+<p>For each column, if any preferred sizes were assigned to it, set its preferred size to the average of all of the assigned ones.</p>
+</li>
+<li>
+<p>Lay out all child boxes.</p>
+</li>
+<li>
+<p>Re-run steps 2 through 6 for the wrapping direction, using the child boxes&#x27; laid-out sizes as their preferred sizes.</p>
+</li>
+</ol>
+<h1 id="box">Box</h1>
+<p>A box is a core unit of the UI.
+For purposes of layout, it is a rectangle, whose size and position are to be determined.</p>
+<figure class="content-center">
+    <img src="images/box_anatomy.png" alt="A box with its inner and outer buffers" class="max-w-full h-auto rounded-image-rounded border-image-border border-image-border-width" width="168" height="204" />
+    <figcaption class="caption">A box with its inner and outer buffers</figcaption>
+</figure>
+<h1 id="buffer">Buffer</h1>
+<p>Buffer is an amount of space around items that will not have content placed into it.
+Any box has both inner and outer buffer on all sides.
+Outer buffer can be used to space it away from other boxes, whereas inner buffer can provide a margin around its children and an area for any borders to be drawn in.
+Buffer collapses with adjacent buffers of siblings and parents.
+Buffer never collapses through box boundaries.
+Buffer never collapses through gap decorations.
+A box&#x27;s inner buffer has the option to be a strong buffer. This means that arbitrarily large buffers can collapse into it.
+A box&#x27;s own inner buffers do not collapse with each other. This is because a box&#x27;s inner buffer on a side is often what provides space for the box&#x27;s border on that side to sit in. If the buffer collapses away, there might not be enough space for the border.</p>
+<figure class="content-center">
+    <img src="images/buffer_collapse_inner_outer.png" alt="An item's outer buffer collapsing with a container's inner buffer" class="max-w-full h-auto rounded-image-rounded border-image-border border-image-border-width" width="240" height="240" />
+    <figcaption class="caption">An item's outer buffer collapsing with a container's inner buffer</figcaption>
+</figure>
+<h1 id="gaps">Gaps</h1>
+<p>A gap is a buffer inserted between children of a container.
+It collapses with those children&#x27;s outer buffers.</p>
+<figure class="content-center">
+    <img src="images/buffer_collapse_gap_buffer.png" alt="A gap buffer collapsing with two adjacent item's outer buffers" class="max-w-full h-auto rounded-image-rounded border-image-border border-image-border-width" width="784" height="752" />
+    <figcaption class="caption">A gap buffer collapsing with two adjacent item's outer buffers</figcaption>
+</figure>
+<h1 id="rack">Rack</h1>
+<p>A rack is a set of items in a row that want to be placed next to one another.
+A rack is one-dimensional.
+There is two operations that can be done on a rack:</p>
+<ol>
+<li>
+<p>Distributing the rack
+In this, the rack&#x27;s items&#x27; sizes are determined by placing and stretching them towards the rack&#x27;s target size.
+They are not assigned any positions, just sizes.
+Items are not stretched if they have a stretch priority of 0 or if the rack&#x27;s target size is indefinite.</p>
+</li>
+<li>
+<p>Aligning the rack
+In this, the distributed rack is aligned inside of its parent, by placing the rack&#x27;s self alignment point on the rack&#x27;s parent alignment point</p>
+</li>
+</ol>
+<p>A rack has:
+- a list of rack items
+- a target size (dots or indefinite)
+- a self alignment (number in the range -1 to 1)
+- a parent alignment (number in the range -1 to 1)</p>
+<p>A rack item consists of:
+- a minimum size (dots)
+- a preferred size (dots or indefinite)
+- a maximum size (dots or indefinite)</p>
+<h1 id="line">Line</h1>
+<p>Some layouts employ lines, which are a rack item that contains multiple boxes, perpendicular to the rack&#x27;s direction.
+A line&#x27;s min size is the largest min size found among the boxes within it. (so that it is at least large enough to contain all of them.)
+If there is no items within the line, it&#x27;s min size is 0.
+A line&#x27;s preferred size is the largest preferred size found among the boxes within it. (so that is can comfortably wrap all of them.)
+If no item within it has a preferred size, the line has no preferred size.</p>
+
+                
+                <!-- Required only on API pages -->
+                <doc-toolbar-member-filter-no-results></doc-toolbar-member-filter-no-results>
+            </div>
+            <footer id="retype-content-footer" class="clear-both">
+            
+                <nav id="retype-nextprev" class="print:hidden flex mt-14">
+                    <div class="w-1/2">
+                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-body-link border border-base-border hover:border-base-border-hover rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="mr-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19 11H7.41l5.29-5.29a.996.996 0 10-1.41-1.41l-7 7a1 1 0 000 1.42l7 7a1.024 1.024 0 001.42-.01.996.996 0 000-1.41L7.41 13H19c.55 0 1-.45 1-1s-.45-1-1-1z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
+                            <span>
+                                <span class="block text-xs font-normal text-base-text-muted">Previous</span>
+                                <span class="block mt-1">Cinebara</span>
+                            </span>
+                        </a>
+                    </div>
+            
+                    <div class="w-1/2">
+                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-body-link border border-base-border hover:border-base-border-hover rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../ui/quickstart/">
+                            <span>
+                                <span class="block text-xs font-normal text-right text-base-text-muted">Next</span>
+                                <span class="block mt-1">Quickstart</span>
+                            </span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="ml-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19.92 12.38a1 1 0 00-.22-1.09l-7-7a.996.996 0 10-1.41 1.41l5.3 5.3H5c-.55 0-1 .45-1 1s.45 1 1 1h11.59l-5.29 5.29a.996.996 0 000 1.41c.19.2.44.3.7.3s.51-.1.71-.29l7-7c.09-.09.16-.21.21-.33z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
+                        </a>
+                    </div>
+                </nav>
+            </footer>
+        </main>
+
+        <div id="retype-page-footer" class="print:border-none border-t border-base-border pt-6 mb-8">
+            <footer class="flex flex-wrap items-center justify-between print:justify-center">
+                <div id="retype-footer-links" class="print:hidden">
+                    <ul class="flex flex-wrap items-center text-sm">
+                    </ul>
+                </div>
+                <div id="retype-copyright" class="print:justify-center py-2 text-footer-text font-footer-link text-sm leading-relaxed"></div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Rendered if sidebar right is enabled -->
+    <!-- Sidebar right skeleton-->
+    <div v-cloak class="fixed top-0 bottom-0 right-0 translate-x-full bg-sidebar-right-bg border-sidebar-right-border lg:sticky lg:border-l lg:shrink-0 lg:pt-6 lg:translate-x-0 sm:w-1/2 lg:w-64 lg:z-0 md:w-104 sidebar-right skeleton">
+        <div class="pl-5">
+            <div class="w-32 h-3 mb-4 bg-skeleton-bg rounded-full loading"></div>
+            <div class="w-48 h-3 mb-4 bg-skeleton-bg rounded-full loading"></div>
+            <div class="w-40 h-3 mb-4 bg-skeleton-bg rounded-full loading"></div>
+        </div>
+    </div>
+
+    <!-- User should be able to hide sidebar right -->
+    <doc-sidebar-right v-cloak></doc-sidebar-right>
+</div>
+
+        </div>
+    </div>
+
+    <doc-search-mobile></doc-search-mobile>
+    <doc-back-to-top></doc-back-to-top>
+</div>
+
+
+    <div id="retype-overlay-target"></div>
+
+        <script data-cfasync="false">window.__DOCS__ = { "title": "Core Observations", level: 1, icon: "file", hasPrism: false, hasInstagram: false, hasMermaid: false, hasMath: false, tocDepth: 23, "md": "/ui/ui.md" }</script>
+</body>
+</html>
