@@ -1,5 +1,5 @@
-﻿# Welcome
+﻿# Cinebara
 
-> ✅ Your website is working.
+> Wow!
 
-- [Welcome](https://docs.example.com/): Welcome
+- [Cinebara](https://coffee-maker.github.io/Cinebara-Docs/welcome.md): Cinebara
