@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.836674390428">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.836677293786">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 4.6.0">
@@ -43,11 +43,11 @@
 
     <script data-cfasync="false">(function(){var cl=document.documentElement.classList,ls=localStorage.getItem("retype_scheme"),hd=cl.contains("dark"),hl=cl.contains("light"),wm=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(ls==="dark"||(!ls&&wm&&!hd&&!hl)){cl.remove("light");cl.add("dark")}else if(ls==="light"||(!ls&&!wm&&!hd&&!hl)){cl.remove("dark");cl.add("light")}})();</script>
 
-    <link href="../resources/css/retype.css?v=4.6.0.836674390428" rel="stylesheet">
+    <link href="../resources/css/retype.css?v=4.6.0.836677293786" rel="stylesheet">
 
-    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.836674390428" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.836677293786" data-turbo-eval="false" defer></script>
     <script data-cfasync="false" src="../resources/js/retype.js?v=4.6.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.836674390428" data-turbo-eval="false" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.836677293786" data-turbo-eval="false" defer></script>
 </head>
 <body>
     <div id="retype-app" class="relative text-base antialiased text-base-text bg-base-bg font-body">
@@ -198,12 +198,18 @@ Every layout mode performs its layout according to these two directions.</p>
 <h1 id="layout-modes">Layout Modes</h1>
 <p>Layout modes very roughly follow this logic:</p>
 <ol>
-<li>Distribute items via racks along the placement axis to determine their sizes in that direction.</li>
-<li>Run layout for the children now that their sizes in the placement axis are determined.</li>
-<li>Distribute items via racks in the wrapping direction.
-Here, the preferred sizes of any boxes are substituted for the sizes obtained during their layout.
-The idea behind this is that a box should, ideally, in the absence of any stretching or size limits, perfectly wrap its contents.</li>
+<li>
+<p>Distribute items via racks along the placement axis to determine their sizes in that direction.</p>
+</li>
+<li>
+<p>Run layout for the children now that their sizes in the placement axis are determined.</p>
+</li>
+<li>
+<p>Distribute items via racks in the wrapping direction.</p>
+</li>
 </ol>
+<p>Here, the preferred sizes of any boxes are substituted for the sizes obtained during their layout.
+The idea behind this is that a box should, ideally, in the absence of any stretching or size limits, perfectly wrap its contents.</p>
 <p>Before laying out a box, it may be of indefinite size along one or both axes. This indicates that the box&#x27;s own layout has infinite space available in these directions. After a box has been laid out, its size has been resolved to be definite on both axes. Note that at this point, the parent box might, during further distribution, squish the box back down to a smaller size. This will induce overflow.</p>
 <p>Imagine an absolutely positioned box that will stretch to fill the entire screen, in a right-to-left, top-to-bottom layout. It first gets a width from the absolute layout. Then its own layout runs, filling that given width and an indefinite height, which might end up larger than the screen. Now the absolute layout squishes this box back down to the size of the screen, inducing overflow.</p>
 <h1 id="root-layout">Root Layout</h1>
@@ -219,7 +225,8 @@ Examples of this include centered modals, popups along the edges of a container 
 <p>Place each child box in its own rack along the placement direction. (These racks also include collapsed end buffers.)</p>
 </li>
 <li>
-<p>Distribute all racks to determine their sizes.</p>
+<p>Distribute all racks to determine their sizes.
+This also determines the placement axis sizes of all child boxes.</p>
 </li>
 <li>
 <p>If the container does not have a placement axis size yet, its placement axis size is that of the largest rack.</p>
@@ -231,7 +238,8 @@ Examples of this include centered modals, popups along the edges of a container 
 <p>Place each child box in its own rack along the wrapping direction, using its laid-out size as the preferred size. (These racks also include collapsed end buffers.)</p>
 </li>
 <li>
-<p>Distribute the wrapping direction racks to determine their sizes.</p>
+<p>Distribute the wrapping direction racks to determine their sizes.
+This also determines the wrapping axis sizes of all child boxes.</p>
 </li>
 <li>
 <p>If the container does not have a wrapping axis size yet, its wrapping axis size is that of the largest wrapping axis rack.</p>
@@ -264,17 +272,18 @@ This is useful for tables and some general UI concepts.</p>
 <li>
 <p>For each box that spans multiple columns:</p>
 <ol>
-<li>If the total min size of all columns that it spans and the gaps between them is less than the spanning box&#x27;s min size, make note of how much size is missing and proportionally assign it to all columns in question, based on their current sizes.
+<li>If the total min size of all spanned columns and the gaps between them is less than the spanning box&#x27;s min size, then make note of how much size is missing and proportionally assign it to all columns in question, based on their current sizes.
+This means that if a box spans two columns with a size of 25 and 75 dots, respectively, then 25% of the missing space will be assigned to the slim column and the remaining 75% will be assigned to the wider column.
 Do not assign any additional min size to gaps.</li>
 </ol>
 </li>
 <li>
 <p>For each column, if any min size increases were assigned to it, add the largest of them.
-Iterate columns so that the columns with the largest available min size increases are processed first.
+If there were any other smaller min size increases assigned, re-run step 3 for the boxes that those smaller min size increases originated from.
+While doing this, column iteration order is carefully chosen to unify all desired min size increases in the least egregious way.
+To facilitate this, columns are iterated so that the columns with the largest available min size increases are processed first.
 Break ties using their second-largest available min size increase and so on. (A non-existant min size increase is smaller than one that does exist.)
-If there were any other, smaller min size increases assigned, re-run step 3 for the boxes that those smaller min size increases originated from.
-This procedure hopes to unify all desired min size increases in the least egregious way.
-If two spanning boxes need to increase a colunms size by different amounts, only the largest increase should be taken, which allows the other spanning box to assign less additional space elsewhere.
+In doing so, if two spanning boxes need to increase a colunms size by different amounts, only the largest increase is taken, which allows the other spanning box to assign less additional space elsewhere.
 One would not want to prioritize smaller min size increases, because this forces boxes that already need a lot of extra min size to take even more elsewhere.
 Whereas allowing the demanding spanners to perform their size increases first, might make further size increases for less demanding spanners entirely unnecessary.</p>
 </li>
@@ -298,13 +307,22 @@ If this means that there is no items to assign this preferred size to, do not as
 </ol>
 </li>
 <li>
-<p>For each column, if any preferred sizes were assigned to it, set its preferred size to the average of all of the assigned ones.</p>
+<p>For each column, if any preferred sizes were assigned to it, determine which preferred size to use as the preferred size of that column, using rules analogous to those for min size increases from step 4.
+This means that each set of spanned columns will prefer to be wide enough to hold its spanners at their preferred size, while also minimizing the total preferred size of all columns.</p>
+</li>
+<li>
+<p>Each box&#x27;s placement axis size is that of the column it sits in.
+If it spans multiple columns, it is the sum of their sizes plus any gaps between them.</p>
 </li>
 <li>
 <p>Lay out all child boxes.</p>
 </li>
 <li>
-<p>Re-run steps 2 through 6 for the wrapping direction, using the child boxes&#x27; laid-out sizes as their preferred sizes.</p>
+<p>Re-run steps 2 through 7 for the wrapping direction, using the child boxes&#x27; laid-out sizes as their preferred sizes.
+This determines the wrapping axis size of all boxes.</p>
+</li>
+<li>
+<p>Align all row and column racks.</p>
 </li>
 </ol>
 <h1 id="rack">Rack</h1>
@@ -333,11 +351,12 @@ In this, the distributed rack is aligned inside of its parent, by placing the ra
 - a preferred size (dots or indefinite)
 - a maximum size (dots or indefinite)</p>
 <h1 id="line">Line</h1>
-<p>Some layouts employ lines, which are a rack item that contains multiple boxes, perpendicular to the rack&#x27;s direction.
-A line&#x27;s min size is the largest min size found among the boxes within it. (so that it is at least large enough to contain all of them.)
-If there is no items within the line, it&#x27;s min size is 0.
-A line&#x27;s preferred size is the largest preferred size found among the boxes within it. (so that is can comfortably wrap all of them.)
-If no item within it has a preferred size, the line has no preferred size.</p>
+<p>Some layouts employ lines, which are a rack item that contains multiple boxes, perpendicular to the rack&#x27;s direction.</p>
+<p>A line&#x27;s min size is the largest min size found among the boxes within it. (so that it is at least large enough to contain all of them.)
+If there is no items within the line, it&#x27;s min size is 0.</p>
+<p>A line&#x27;s preferred size is the largest preferred size found among the boxes within it. (so that it can comfortably wrap all of them.)
+If no item within it has a preferred size, the line has no preferred size.
+This might seem unintuitive for grids, where one would imagine all items to be the same size, but grids where items are of different sizes are desireable. One example would be a grid of images with different aspect ratios.</p>
 
                 
                 <!-- Required only on API pages -->

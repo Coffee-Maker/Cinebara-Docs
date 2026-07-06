@@ -53,9 +53,13 @@ Thus, all layout modes operate on the placement and wrapping directions, which m
 
 # Layout Modes
 Layout modes very roughly follow this logic:
+
 1. Distribute items via racks along the placement axis to determine their sizes in that direction.
+
 2. Run layout for the children now that their sizes in the placement axis are determined.
+
 3. Distribute items via racks in the wrapping direction.
+
 Here, the preferred sizes of any boxes are substituted for the sizes obtained during their layout.
 The idea behind this is that a box should, ideally, in the absence of any stretching or size limits, perfectly wrap its contents.
 
@@ -77,6 +81,7 @@ Absolute layout is performed as follows:
 1. Place each child box in its own rack along the placement direction. (These racks also include collapsed end buffers.)
 
 2. Distribute all racks to determine their sizes.
+This also determines the placement axis sizes of all child boxes.
 
 3. If the container does not have a placement axis size yet, its placement axis size is that of the largest rack.
 
@@ -85,6 +90,7 @@ Absolute layout is performed as follows:
 5. Place each child box in its own rack along the wrapping direction, using its laid-out size as the preferred size. (These racks also include collapsed end buffers.)
 
 6. Distribute the wrapping direction racks to determine their sizes.
+This also determines the wrapping axis sizes of all child boxes.
 
 7. If the container does not have a wrapping axis size yet, its wrapping axis size is that of the largest wrapping axis rack.
 
@@ -114,15 +120,16 @@ Note that any time that this algorithm 'assigns' sizes to colunms, it does not a
 
 3. For each box that spans multiple columns:
 
-	1. If the total min size of all columns that it spans and the gaps between them is less than the spanning box's min size, make note of how much size is missing and proportionally assign it to all columns in question, based on their current sizes.
+	1. If the total min size of all spanned columns and the gaps between them is less than the spanning box's min size, then make note of how much size is missing and proportionally assign it to all columns in question, based on their current sizes.
+	This means that if a box spans two columns with a size of 25 and 75 dots, respectively, then 25% of the missing space will be assigned to the slim column and the remaining 75% will be assigned to the wider column.
 	Do not assign any additional min size to gaps.
 
 4. For each column, if any min size increases were assigned to it, add the largest of them.
-Iterate columns so that the columns with the largest available min size increases are processed first.
+If there were any other smaller min size increases assigned, re-run step 3 for the boxes that those smaller min size increases originated from.
+While doing this, column iteration order is carefully chosen to unify all desired min size increases in the least egregious way.
+To facilitate this, columns are iterated so that the columns with the largest available min size increases are processed first.
 Break ties using their second-largest available min size increase and so on. (A non-existant min size increase is smaller than one that does exist.)
-If there were any other, smaller min size increases assigned, re-run step 3 for the boxes that those smaller min size increases originated from.
-This procedure hopes to unify all desired min size increases in the least egregious way.
-If two spanning boxes need to increase a colunms size by different amounts, only the largest increase should be taken, which allows the other spanning box to assign less additional space elsewhere.
+In doing so, if two spanning boxes need to increase a colunms size by different amounts, only the largest increase is taken, which allows the other spanning box to assign less additional space elsewhere.
 One would not want to prioritize smaller min size increases, because this forces boxes that already need a lot of extra min size to take even more elsewhere.
 Whereas allowing the demanding spanners to perform their size increases first, might make further size increases for less demanding spanners entirely unnecessary.
 
@@ -139,11 +146,18 @@ Whereas allowing the demanding spanners to perform their size increases first, m
 		Do not assign any preferred sizes to gaps or items that already have a set preferred size.
 		If this means that there is no items to assign this preferred size to, do not assign it at all.
 
-6. For each column, if any preferred sizes were assigned to it, set its preferred size to the average of all of the assigned ones.
+6. For each column, if any preferred sizes were assigned to it, determine which preferred size to use as the preferred size of that column, using rules analogous to those for min size increases from step 4.
+This means that each set of spanned columns will prefer to be wide enough to hold its spanners at their preferred size, while also minimizing the total preferred size of all columns.
 
-7. Lay out all child boxes.
+7. Each box's placement axis size is that of the column it sits in.
+If it spans multiple columns, it is the sum of their sizes plus any gaps between them.
 
-8. Re-run steps 2 through 6 for the wrapping direction, using the child boxes' laid-out sizes as their preferred sizes.
+8. Lay out all child boxes.
+
+9. Re-run steps 2 through 7 for the wrapping direction, using the child boxes' laid-out sizes as their preferred sizes.
+This determines the wrapping axis size of all boxes.
+
+10. Align all row and column racks.
 
 # Rack
 A rack is a set of items in a row that want to be placed next to one another.
@@ -170,7 +184,10 @@ A rack item consists of:
 # Line
 
 Some layouts employ lines, which are a rack item that contains multiple boxes, perpendicular to the rack's direction.
+
 A line's min size is the largest min size found among the boxes within it. (so that it is at least large enough to contain all of them.)
 If there is no items within the line, it's min size is 0.
-A line's preferred size is the largest preferred size found among the boxes within it. (so that is can comfortably wrap all of them.)
+
+A line's preferred size is the largest preferred size found among the boxes within it. (so that it can comfortably wrap all of them.)
 If no item within it has a preferred size, the line has no preferred size.
+This might seem unintuitive for grids, where one would imagine all items to be the same size, but grids where items are of different sizes are desireable. One example would be a grid of images with different aspect ratios.
