@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.836622423291">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.836674390428">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 4.6.0">
@@ -23,7 +23,7 @@
     <meta property="og:url" content="https://docs.cinebara.com/ui/">
     <meta property="og:title" content="Core Observations">
     <meta property="og:description" content="In many different UI layouts, items are placed side-by-side and then distributed and aligned in some manner. For this layout system, we have constructed some generic primitives that accomplish this and are used by all layout modes, to handle these common behaviors in a unified way.">
-    <meta property="og:image" content="https://docs.cinebara.com/ui/images/writing_direction.png">
+    <meta property="og:image" content="https://docs.cinebara.com/ui/images/box_anatomy.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="Core Observations">
@@ -35,7 +35,7 @@
     <meta name="twitter:url" content="https://docs.cinebara.com/ui/">
     <meta name="twitter:title" content="Core Observations">
     <meta name="twitter:description" content="In many different UI layouts, items are placed side-by-side and then distributed and aligned in some manner. For this layout system, we have constructed some generic primitives that accomplish this and are used by all layout modes, to handle these common behaviors in a unified way.">
-    <meta name="twitter:image" content="https://docs.cinebara.com/ui/images/writing_direction.png">
+    <meta name="twitter:image" content="https://docs.cinebara.com/ui/images/box_anatomy.png">
     <meta name="twitter:image:alt" content="Core Observations">
 
     <!-- Alternate Markdown -->
@@ -43,11 +43,11 @@
 
     <script data-cfasync="false">(function(){var cl=document.documentElement.classList,ls=localStorage.getItem("retype_scheme"),hd=cl.contains("dark"),hl=cl.contains("light"),wm=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(ls==="dark"||(!ls&&wm&&!hd&&!hl)){cl.remove("light");cl.add("dark")}else if(ls==="light"||(!ls&&!wm&&!hd&&!hl)){cl.remove("dark");cl.add("light")}})();</script>
 
-    <link href="../resources/css/retype.css?v=4.6.0.836622423291" rel="stylesheet">
+    <link href="../resources/css/retype.css?v=4.6.0.836674390428" rel="stylesheet">
 
-    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.836622423291" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.836674390428" data-turbo-eval="false" defer></script>
     <script data-cfasync="false" src="../resources/js/retype.js?v=4.6.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.836622423291" data-turbo-eval="false" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.836674390428" data-turbo-eval="false" defer></script>
 </head>
 <body>
     <div id="retype-app" class="relative text-base antialiased text-base-text bg-base-bg font-body">
@@ -146,15 +146,37 @@ For this layout system, we have constructed some generic primitives that accompl
 A rack is a one-dimensional concept responsible for distributing and aligning a set of items into some available space on an axis.
 A line generalizes how to treat an entire row of boxes as a single rack item.
 This can happen when aligning the rows in a flex layout, but is most common in grid layout, where entire rows and columns are treated as single rack items.</p>
-<h1 id="layout-modes">Layout Modes</h1>
-<p>Layout modes very roughly follow this logic:</p>
-<ol>
-<li>Distribute items via racks along the placement direction</li>
-<li>Run layout for the children now that their sizes in the placement-axis are determined</li>
-<li>Distribute items via racks in the wrapping direction.</li>
-</ol>
-<p>Before laying out a box, it may be of indefinite size along one or both axes. This indicates that the box&#x27;s own layout has infinite space available in these directions. After a box has been laid out, its size has been resolved to be definite on both axes. Note that at this point, the parent box might, during further distribution, squish the box back down to a smaller size. This will induce overflow.</p>
-<p>Imagine an absolutely positioned box that will stretch to fill the entire screen, in a right-to-left, top-to-bottom layout. It first gets a width from the absolute layout. Its own layout then runs, filling that given width and an indefinite height, which might end up larger than the screen. Now the absolute layout squishes this box back down to the size of the screen, and scrollbars appear.</p>
+<h1 id="box">Box</h1>
+<p>A box is a core unit of the UI.
+For purposes of layout, it is a rectangle, whose size and position are to be determined.
+Boxes furthermore have inner and outer buffer regions, which allow them to be spaced from one another.</p>
+<figure class="content-center">
+    <img src="images/box_anatomy.png" alt="A box with its inner and outer buffers" class="max-w-full h-auto rounded-image-rounded border-image-border border-image-border-width" width="332" height="404" />
+    <figcaption class="caption">A box with its inner and outer buffers</figcaption>
+</figure>
+<h1 id="buffer">Buffer</h1>
+<p>Buffer is an amount of space around boxes that will not have content placed into it.
+Any box can have both inner and outer buffer on all sides.
+Outer buffer can be used to space it away from other boxes, whereas inner buffer can provide a margin around its children and an area for any borders to be drawn in.
+Buffer collapses with adjacent buffers of siblings and parents.
+Buffer never collapses through box boundaries.
+Buffer never collapses through gap decorations.
+A box&#x27;s inner buffer has the option to be a strong buffer. This means that arbitrarily large buffers can collapse into it.
+This is nice in cases where children might have large buffers to be used for spacing them away from other actual content, but the container&#x27;s edges can be seen as the end of all content.
+The container&#x27;s inner buffers are also far more concerned with giving an even spacing around children, to make the container look nice or to allow it to tightly wrap its child boxes regardless.
+A box&#x27;s own inner buffers do not collapse with each other. This is because a box&#x27;s inner buffer on a side is often what provides space for the box&#x27;s border on that side to sit in. If the buffer collapses away, there might not be enough space for the border.</p>
+<figure class="content-center">
+    <img src="images/buffer_collapse_inner_outer.png" alt="An item's outer buffer collapsing with a container's inner buffer" class="max-w-full h-auto rounded-image-rounded border-image-border border-image-border-width" width="369" height="369" />
+    <figcaption class="caption">An item's outer buffer collapsing with a container's inner buffer</figcaption>
+</figure>
+<h1 id="gaps">Gaps</h1>
+<p>A gap is a buffer inserted between items in a container.
+This includes gaps between things such as flex items and table rows and columns.
+It collapses with those item&#x27;s outer buffers.</p>
+<figure class="content-center">
+    <img src="images/buffer_collapse_gap_buffer.png" alt="A gap buffer collapsing with two adjacent item's outer buffers" class="max-w-full h-auto rounded-image-rounded border-image-border border-image-border-width" width="784" height="752" />
+    <figcaption class="caption">A gap buffer collapsing with two adjacent item's outer buffers</figcaption>
+</figure>
 <h1 id="directions">Directions</h1>
 <p>UI inherently exist in two dimensions, where it has a horizontal direction and a vertical direction. That said, for anything that will contain human text, it makes sense to conceptualize these as a primary and a secondary direction. English text has words going left to right, and if there is not enough space remaining, it wraps onto more lines, going downwards. We thus arrive at our terms for the X and Y axes: The placement direction and the wrapping direction.
 Every layout mode performs its layout according to these two directions.</p>
@@ -173,12 +195,23 @@ Every layout mode performs its layout according to these two directions.</p>
     <img src="images/layout_directions_1.png" alt="A visualization of placement and wrapping directions" class="max-w-full h-auto rounded-image-rounded border-image-border border-image-border-width" width="452" height="292" />
     <figcaption class="caption">A visualization of placement and wrapping directions</figcaption>
 </figure>
+<h1 id="layout-modes">Layout Modes</h1>
+<p>Layout modes very roughly follow this logic:</p>
+<ol>
+<li>Distribute items via racks along the placement axis to determine their sizes in that direction.</li>
+<li>Run layout for the children now that their sizes in the placement axis are determined.</li>
+<li>Distribute items via racks in the wrapping direction.
+Here, the preferred sizes of any boxes are substituted for the sizes obtained during their layout.
+The idea behind this is that a box should, ideally, in the absence of any stretching or size limits, perfectly wrap its contents.</li>
+</ol>
+<p>Before laying out a box, it may be of indefinite size along one or both axes. This indicates that the box&#x27;s own layout has infinite space available in these directions. After a box has been laid out, its size has been resolved to be definite on both axes. Note that at this point, the parent box might, during further distribution, squish the box back down to a smaller size. This will induce overflow.</p>
+<p>Imagine an absolutely positioned box that will stretch to fill the entire screen, in a right-to-left, top-to-bottom layout. It first gets a width from the absolute layout. Then its own layout runs, filling that given width and an indefinite height, which might end up larger than the screen. Now the absolute layout squishes this box back down to the size of the screen, inducing overflow.</p>
 <h1 id="root-layout">Root Layout</h1>
-<p>The root box positioned at an origin.
+<p>The root box is positioned at an origin.
 It&#x27;s self alignment is used to determine how exactly it sits on the origin.
-This makes it possible to have boxes of indefinite size that are either centered on a point or grow into a certain direction. (or anything in-between)</p>
+This makes it possible to have boxes of indefinite size that are either centered on a point or grow into a certain direction. (or anything in-between, really)</p>
 <h1 id="absolute-layout">Absolute Layout</h1>
-<p>Absolute layout exists to position items absolutely, relative to their parent.
+<p>Absolute layout exists to position boxes relative to their parent, without special alignment with regards to their siblings.
 Examples of this include centered modals, popups along the edges of a container and also draggable windows on a desktop.</p>
 <p>Absolute layout is performed as follows:</p>
 <ol>
@@ -274,33 +307,6 @@ If this means that there is no items to assign this preferred size to, do not as
 <p>Re-run steps 2 through 6 for the wrapping direction, using the child boxes&#x27; laid-out sizes as their preferred sizes.</p>
 </li>
 </ol>
-<h1 id="box">Box</h1>
-<p>A box is a core unit of the UI.
-For purposes of layout, it is a rectangle, whose size and position are to be determined.</p>
-<figure class="content-center">
-    <img src="images/box_anatomy.png" alt="A box with its inner and outer buffers" class="max-w-full h-auto rounded-image-rounded border-image-border border-image-border-width" width="332" height="404" />
-    <figcaption class="caption">A box with its inner and outer buffers</figcaption>
-</figure>
-<h1 id="buffer">Buffer</h1>
-<p>Buffer is an amount of space around items that will not have content placed into it.
-Any box has both inner and outer buffer on all sides.
-Outer buffer can be used to space it away from other boxes, whereas inner buffer can provide a margin around its children and an area for any borders to be drawn in.
-Buffer collapses with adjacent buffers of siblings and parents.
-Buffer never collapses through box boundaries.
-Buffer never collapses through gap decorations.
-A box&#x27;s inner buffer has the option to be a strong buffer. This means that arbitrarily large buffers can collapse into it.
-A box&#x27;s own inner buffers do not collapse with each other. This is because a box&#x27;s inner buffer on a side is often what provides space for the box&#x27;s border on that side to sit in. If the buffer collapses away, there might not be enough space for the border.</p>
-<figure class="content-center">
-    <img src="images/buffer_collapse_inner_outer.png" alt="An item's outer buffer collapsing with a container's inner buffer" class="max-w-full h-auto rounded-image-rounded border-image-border border-image-border-width" width="369" height="369" />
-    <figcaption class="caption">An item's outer buffer collapsing with a container's inner buffer</figcaption>
-</figure>
-<h1 id="gaps">Gaps</h1>
-<p>A gap is a buffer inserted between children of a container.
-It collapses with those children&#x27;s outer buffers.</p>
-<figure class="content-center">
-    <img src="images/buffer_collapse_gap_buffer.png" alt="A gap buffer collapsing with two adjacent item's outer buffers" class="max-w-full h-auto rounded-image-rounded border-image-border border-image-border-width" width="784" height="752" />
-    <figcaption class="caption">A gap buffer collapsing with two adjacent item's outer buffers</figcaption>
-</figure>
 <h1 id="rack">Rack</h1>
 <p>A rack is a set of items in a row that want to be placed next to one another.
 A rack is one-dimensional.
