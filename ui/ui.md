@@ -8,15 +8,36 @@ A line generalizes how to treat an entire row of boxes as a single rack item.
 This can happen when aligning the rows in a flex layout, but is most common in grid layout, where entire rows and columns are treated as single rack items.
 
 
-# Layout Modes
-Layout modes very roughly follow this logic:
-1. Distribute items via racks along the placement direction
-2. Run layout for the children now that their sizes in the placement-axis are determined
-3. Distribute items via racks in the wrapping direction.
+# Box
+A box is a core unit of the UI.
+For purposes of layout, it is a rectangle, whose size and position are to be determined.
+Boxes furthermore have inner and outer buffer regions, which allow them to be spaced from one another.
 
-Before laying out a box, it may be of indefinite size along one or both axes. This indicates that the box's own layout has infinite space available in these directions. After a box has been laid out, its size has been resolved to be definite on both axes. Note that at this point, the parent box might, during further distribution, squish the box back down to a smaller size. This will induce overflow.
+![A box with its inner and outer buffers](./images/box_anatomy.png)
 
-Imagine an absolutely positioned box that will stretch to fill the entire screen, in a right-to-left, top-to-bottom layout. It first gets a width from the absolute layout. Its own layout then runs, filling that given width and an indefinite height, which might end up larger than the screen. Now the absolute layout squishes this box back down to the size of the screen, and scrollbars appear.
+
+# Buffer
+Buffer is an amount of space around boxes that will not have content placed into it.
+Any box can have both inner and outer buffer on all sides.
+Outer buffer can be used to space it away from other boxes, whereas inner buffer can provide a margin around its children and an area for any borders to be drawn in.
+Buffer collapses with adjacent buffers of siblings and parents.
+Buffer never collapses through box boundaries.
+Buffer never collapses through gap decorations.
+A box's inner buffer has the option to be a strong buffer. This means that arbitrarily large buffers can collapse into it.
+This is nice in cases where children might have large buffers to be used for spacing them away from other actual content, but the container's edges can be seen as the end of all content.
+The container's inner buffers are also far more concerned with giving an even spacing around children, to make the container look nice or to allow it to tightly wrap its child boxes regardless.
+A box's own inner buffers do not collapse with each other. This is because a box's inner buffer on a side is often what provides space for the box's border on that side to sit in. If the buffer collapses away, there might not be enough space for the border.
+
+![An item's outer buffer collapsing with a container's inner buffer](./images/buffer_collapse_inner_outer.png)
+
+
+# Gaps
+A gap is a buffer inserted between items in a container.
+This includes gaps between things such as flex items and table rows and columns.
+It collapses with those item's outer buffers.
+
+![A gap buffer collapsing with two adjacent item's outer buffers](./images/buffer_collapse_gap_buffer.png)
+
 
 # Directions
 UI inherently exist in two dimensions, where it has a horizontal direction and a vertical direction. That said, for anything that will contain human text, it makes sense to conceptualize these as a primary and a secondary direction. English text has words going left to right, and if there is not enough space remaining, it wraps onto more lines, going downwards. We thus arrive at our terms for the X and Y axes: The placement direction and the wrapping direction.
@@ -35,14 +56,31 @@ Thus, all layout modes operate on the placement and wrapping directions, which m
 ![A visualization of placement and wrapping directions](./images/layout_directions_1.png)
 
 
+# Layout Modes
+Layout modes very roughly follow this logic:
+
+1. Distribute items via racks along the placement axis to determine their sizes in that direction.
+
+2. Run layout for the children now that their sizes in the placement axis are determined.
+
+3. Distribute items via racks in the wrapping direction.
+
+Here, the preferred sizes of any boxes are substituted for the sizes obtained during their layout.
+The idea behind this is that a box should, ideally, in the absence of any stretching or size limits, perfectly wrap its contents.
+
+Before laying out a box, it may be of indefinite size along one or both axes. This indicates that the box's own layout has infinite space available in these directions. After a box has been laid out, its size has been resolved to be definite on both axes. Note that at this point, the parent box might, during further distribution, squish the box back down to a smaller size. This will induce overflow.
+
+Imagine an absolutely positioned box that will stretch to fill the entire screen, in a right-to-left, top-to-bottom layout. It first gets a width from the absolute layout. Then its own layout runs, filling that given width and an indefinite height, which might end up larger than the screen. Now the absolute layout squishes this box back down to the size of the screen, inducing overflow.
+
+
 # Root Layout
-The root box positioned at an origin.
+The root box is positioned at an origin.
 It's self alignment is used to determine how exactly it sits on the origin.
-This makes it possible to have boxes of indefinite size that are either centered on a point or grow into a certain direction. (or anything in-between)
+This makes it possible to have boxes of indefinite size that are either centered on a point or grow into a certain direction. (or anything in-between, really)
 
 
 # Absolute Layout
-Absolute layout exists to position items absolutely, relative to their parent.
+Absolute layout exists to position boxes relative to their parent, without special alignment with regards to their siblings.
 Examples of this include centered modals, popups along the edges of a container and also draggable windows on a desktop.
 
 Absolute layout is performed as follows:
@@ -50,6 +88,7 @@ Absolute layout is performed as follows:
 1. Place each child box in its own rack along the placement direction. (These racks also include collapsed end buffers.)
 
 2. Distribute all racks to determine their sizes.
+This also determines the placement axis sizes of all child boxes.
 
 3. If the container does not have a placement axis size yet, its placement axis size is that of the largest rack.
 
@@ -58,6 +97,7 @@ Absolute layout is performed as follows:
 5. Place each child box in its own rack along the wrapping direction, using its laid-out size as the preferred size. (These racks also include collapsed end buffers.)
 
 6. Distribute the wrapping direction racks to determine their sizes.
+This also determines the wrapping axis sizes of all child boxes.
 
 7. If the container does not have a wrapping axis size yet, its wrapping axis size is that of the largest wrapping axis rack.
 
@@ -69,10 +109,53 @@ This means that the container will resolve indefinite sizes to be at least its m
 Alignment may want to align items to be fully or partially outside of the container and this still allows for that.
 It also leaves enough space for those items to slide fully into view.
 
+To determine an absolute container's min size from its children, calculate each child box's min size plus collapsed end buffers and take the largest of those.
+
+
+To determine an absolute container's preferred size from its children, calculate each child box's preferred size plus collapsed end buffers and take the largest of those.
+
 
 # Flex Layout
 Flex layout exists to lay out items into lines of content that may or may not be allowed to wrap.
 Examples of this include toolbars, lines of text, or stacks of messages in a chat history.
+
+Flex layout is performed as follows:
+
+1. Assign child boxes to flex rows.
+In a non-wrapping flex container, all children are placed in the same row.
+In a wrapping flex container, children are placed in rows at their preferred size (or min size if no preferred size is given) and placement wraps once placing a child would exceed the available size in the placement direction.
+Since gaps are only placed between items, so no gap is placed at the end of a row.
+
+2. Create a rack for each row and use it to distribute the items in that row.
+This also determines the placement axis sizes of all child boxes.
+
+3. Lay out all child boxes to determine their wrapping axis sizes.
+From now on, this size is used in place of the preferred size along the wrapping axis.
+
+3. If this is a wrapping flex container:
+(TODO: Wrapping and non-wrapping flex containers may want to be identical by leaving the outer edges of the first and last line open.)
+
+	1. Create a rack that contains one line for each row. This rack also contains the wrapping axis gaps and inner buffers of the flex container.
+
+	4. Distribute and align that wrapping axis rack to position the rows.
+
+5. Create a wrapping axis rack for each child box and use it to distribute and align that child box within its row.
+In a wrapping flex container, this rack includes the child's outer buffers, but they do not collapse with anything, since they are fenced off by the line that the item sits in.
+In a non-wrapping flex container, this instead works analogous to absolute layout.
+
+Determining a non-wrapping flex container's min and preferred size in the wrapping axis from its children works the same way it does for an absolute container.
+This is because the children are entirely independent of one another in that axis and their outer buffers collapse with the container's inner buffers.
+
+To determine a non-wrapping flex container's min size in the placement axis, sum up the min sizes of all child boxes in that axis plus any (collapsed) buffers in that axis.
+
+To determine a flex container's preferred size in the placement axis, sum up the preferred sizes of all child boxes in that axis plus any (collapsed) buffers in that axis.
+
+To determine a wrapping flex containers min size in the wrapping axis, sum up the min sizes of all lines in that axis plus the container's gaps and inner buffers.
+
+To determine a wrapping flex containers preferred size in the wrapping axis, sum up the preferred sizes of all lines in that axis plus the container's gaps and inner buffers.
+
+Determining a wrapping flex container's min size in the placement axis from its children works exactly like it does in an absolute container.
+This works since the min size implies that every child box is placed on its own row, at which point they are independent of one another in that axis.
 
 
 # Grid Layout
@@ -89,15 +172,16 @@ Note that any time that this algorithm 'assigns' sizes to colunms, it does not a
 
 3. For each box that spans multiple columns:
 
-	1. If the total min size of all columns that it spans and the gaps between them is less than the spanning box's min size, make note of how much size is missing and proportionally assign it to all columns in question, based on their current sizes.
+	1. If the total min size of all spanned columns and the gaps between them is less than the spanning box's min size, then make note of how much size is missing and proportionally assign it to all columns in question, based on their current sizes.
+	This means that if a box spans two columns with a size of 25 and 75 dots, respectively, then 25% of the missing space will be assigned to the slim column and the remaining 75% will be assigned to the wider column.
 	Do not assign any additional min size to gaps.
 
 4. For each column, if any min size increases were assigned to it, add the largest of them.
-Iterate columns so that the columns with the largest available min size increases are processed first.
+If there were any other smaller min size increases assigned, re-run step 3 for the boxes that those smaller min size increases originated from.
+While doing this, column iteration order is carefully chosen to unify all desired min size increases in the least egregious way.
+To facilitate this, columns are iterated so that the columns with the largest available min size increases are processed first.
 Break ties using their second-largest available min size increase and so on. (A non-existant min size increase is smaller than one that does exist.)
-If there were any other, smaller min size increases assigned, re-run step 3 for the boxes that those smaller min size increases originated from.
-This procedure hopes to unify all desired min size increases in the least egregious way.
-If two spanning boxes need to increase a colunms size by different amounts, only the largest increase should be taken, which allows the other spanning box to assign less additional space elsewhere.
+In doing so, if two spanning boxes need to increase a colunms size by different amounts, only the largest increase is taken, which allows the other spanning box to assign less additional space elsewhere.
 One would not want to prioritize smaller min size increases, because this forces boxes that already need a lot of extra min size to take even more elsewhere.
 Whereas allowing the demanding spanners to perform their size increases first, might make further size increases for less demanding spanners entirely unnecessary.
 
@@ -114,35 +198,21 @@ Whereas allowing the demanding spanners to perform their size increases first, m
 		Do not assign any preferred sizes to gaps or items that already have a set preferred size.
 		If this means that there is no items to assign this preferred size to, do not assign it at all.
 
-6. For each column, if any preferred sizes were assigned to it, set its preferred size to the average of all of the assigned ones.
+6. For each column, if any preferred sizes were assigned to it, determine which preferred size to use as the preferred size of that column, using rules analogous to those for min size increases from step 4.
+This means that each set of spanned columns will prefer to be wide enough to hold its spanners at their preferred size, while also minimizing the total preferred size of all columns.
 
-7. Lay out all child boxes.
+7. Each box's placement axis size is that of the column it sits in.
+If it spans multiple columns, it is the sum of their sizes plus any gaps between them.
 
-8. Re-run steps 2 through 6 for the wrapping direction, using the child boxes' laid-out sizes as their preferred sizes.
+8. Lay out all child boxes.
 
-# Box
-A box is a core unit of the UI.
-For purposes of layout, it is a rectangle, whose size and position are to be determined.
+9. Re-run steps 2 through 7 for the wrapping direction, using the child boxes' laid-out sizes as their preferred sizes.
+This determines the wrapping axis size of all boxes.
 
-![A box with its inner and outer buffers](./images/box_anatomy.png)
+10. Align all row and column racks.
 
-# Buffer
-Buffer is an amount of space around items that will not have content placed into it.
-Any box has both inner and outer buffer on all sides.
-Outer buffer can be used to space it away from other boxes, whereas inner buffer can provide a margin around its children and an area for any borders to be drawn in.
-Buffer collapses with adjacent buffers of siblings and parents.
-Buffer never collapses through box boundaries.
-Buffer never collapses through gap decorations.
-A box's inner buffer has the option to be a strong buffer. This means that arbitrarily large buffers can collapse into it.
-A box's own inner buffers do not collapse with each other. This is because a box's inner buffer on a side is often what provides space for the box's border on that side to sit in. If the buffer collapses away, there might not be enough space for the border.
-
-![An item's outer buffer collapsing with a container's inner buffer](./images/buffer_collapse_inner_outer.png)
-
-# Gaps
-A gap is a buffer inserted between children of a container.
-It collapses with those children's outer buffers.
-
-![A gap buffer collapsing with two adjacent item's outer buffers](./images/buffer_collapse_gap_buffer.png)
+11. Create racks on both axes for each child box and use them to distribute and align all child boxes within their rows and columns.
+These rack include the children's outer buffers, but they do not collapse with anything.
 
 # Rack
 A rack is a set of items in a row that want to be placed next to one another.
@@ -170,7 +240,13 @@ A rack item consists of:
 # Line
 
 Some layouts employ lines, which are a rack item that contains multiple boxes, perpendicular to the rack's direction.
+
 A line's min size is the largest min size found among the boxes within it. (so that it is at least large enough to contain all of them.)
 If there is no items within the line, it's min size is 0.
-A line's preferred size is the largest preferred size found among the boxes within it. (so that is can comfortably wrap all of them.)
+For purposes of this determination, a box's min size includes its outer buffers.
+A line does not itself have any outer buffers. Lines should generally be spaced by using gaps between them.
+
+A line's preferred size is the largest preferred size found among the boxes within it. (so that it can comfortably wrap all of them.)
 If no item within it has a preferred size, the line has no preferred size.
+For purposes of this determination, a box's preferred size also includes its outer buffers.
+This might seem unintuitive for grids, where one would imagine all items to be the same size, but grids where items are of different sizes are desireable. One example would be a grid of images with different aspect ratios.
