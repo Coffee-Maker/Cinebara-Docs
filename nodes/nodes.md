@@ -37,6 +37,6 @@ First, all ghost trees are processed in order of session age descending. Older g
 
 Some events may bypass certain trees for security or sensibility reasons. For example, your personal inputs are sent to your personal ghost and then to the stage. They are never propagated to other user's ghosts.
 
-:::category
-name: nodes
-:::
+{{ for page in content.categories["Guides"].pages ~}}
+- [{{ page.title }}]({{ page.url }})
+{{ end }}
