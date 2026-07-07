@@ -9,3 +9,12 @@ branding:
   #   link: https://docs.cinebara.com
 # footer:
 #   copyright: "&copy; Copyright . All rights reserved."
+
+
+lastUpdated:
+  date:
+    enabled: true
+    source: committer
+  by:
+    enabled: true
+    source: committer
