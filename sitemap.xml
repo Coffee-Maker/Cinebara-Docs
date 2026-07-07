@@ -2,18 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://docs.cinebara.com/</loc>
-    <lastmod>2026-07-07T00:08:05Z</lastmod>
+    <lastmod>2026-07-07T03:00:32Z</lastmod>
   </url>
   <url>
     <loc>https://docs.cinebara.com/ui/</loc>
-    <lastmod>2026-07-07T00:08:05Z</lastmod>
+    <lastmod>2026-07-07T03:00:32Z</lastmod>
   </url>
   <url>
-    <loc>https://docs.cinebara.com/ui/quickstart/</loc>
-    <lastmod>2026-07-07T00:08:05Z</lastmod>
+    <loc>https://docs.cinebara.com/nodes/</loc>
+    <lastmod>2026-07-07T03:00:32Z</lastmod>
   </url>
   <url>
     <loc>https://docs.cinebara.com/cinebara_structure/</loc>
-    <lastmod>2026-07-07T00:08:05Z</lastmod>
+    <lastmod>2026-07-07T03:00:32Z</lastmod>
+  </url>
+  <url>
+    <loc>https://docs.cinebara.com/input/</loc>
+    <lastmod>2026-07-07T03:00:32Z</lastmod>
+  </url>
+  <url>
+    <loc>https://docs.cinebara.com/sessions/</loc>
+    <lastmod>2026-07-07T03:00:32Z</lastmod>
+  </url>
+  <url>
+    <loc>https://docs.cinebara.com/stages/</loc>
+    <lastmod>2026-07-07T03:00:32Z</lastmod>
+  </url>
+  <url>
+    <loc>https://docs.cinebara.com/ui/quickstart/</loc>
+    <lastmod>2026-07-07T03:00:32Z</lastmod>
   </url>
 </urlset>

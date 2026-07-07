@@ -1,10 +1,14 @@
 ﻿# Cinebara Docs
 
-> Docs & plans for Cinebara available at https://docs.cinebara.com
+> Docs & plans for Cinebara available at https://docs.cinebara.com.
 
 - [Cinebara Docs](https://docs.cinebara.com/readme.md): Cinebara Docs
 - [Core Observations](https://docs.cinebara.com/ui/ui.md): In many different UI layouts, items are placed side-by-side and then distributed and aligned in some manner. For this layout system, we have constructed some generic primitives that accomplish this and are used by all layout modes, to handle these common behaviors in a unified way.
-- [Nodes](https://docs.cinebara.com/cinebara_structure.md): A Node is a thing which may have other Nodes as children. A Node's parent is the singular Node that it is a child of. A Node can not have more than one parent, but it might have no parent at all.
+- [Entities](https://docs.cinebara.com/cinebara_structure.md): An entity is some separate tree that does not exist in a Stage's tree but is referenced by some node within the Stage's tree. The node that sits in the
+- [Input](https://docs.cinebara.com/input.md): Raw inputs are transformed into Actions via a series of Action Generators. An Action Generator can be though of as a keybind, something that turns a raw input concept (Like pressing the W key) into an Action with a purpose (Like "move forward").
+- [Nodes](https://docs.cinebara.com/nodes.md): A Node is a thing which may have other Nodes as children. A Node's parent is the singular Node that it is a child of. A Node can not have more than one parent, but it may have no parent at all.
+- [Sessions](https://docs.cinebara.com/sessions.md): A session holds a loaded instance of a Stage and may be networked. Fundamentally, a session exists to provide access to a Stage.
+- [Stages](https://docs.cinebara.com/stages.md): A Stage holds the content of a Session and is also the thing you conceptually save (when closing a session) and load (when starting a session). Stages can be edited and performed on entirely within Cinebara.
 
 ## Core Observations
 
