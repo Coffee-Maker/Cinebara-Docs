@@ -13,6 +13,6 @@
 
 ## Nodes
 
-- [Label (Node)](https://docs.cinebara.com/nodes/label.md): This node is not yet implemented
-- [Transform 3D (Node)](https://docs.cinebara.com/nodes/transform_3d.md): This node is currently implemented as "Node3D" and is under discussion. It is highly subject to change.
-- [Viewport (Node)](https://docs.cinebara.com/nodes/viewport.md): A viewport is not currently implemented as a Node
+- [Label (Node)](https://docs.cinebara.com/nodes/label.md): Provides a name for a specific branch of a tree. It is useful for organization.
+- [Transform 3D (Node)](https://docs.cinebara.com/nodes/transform_3d.md): Provides a 3D transformation to all Nodes under it.
+- [Viewport (Node)](https://docs.cinebara.com/nodes/viewport.md): Provides a render target that can be drawn onto by other nodes. Paired with a Camera, it can supply a view into a Stage.

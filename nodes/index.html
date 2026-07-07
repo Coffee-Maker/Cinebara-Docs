@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.836760048834">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.836760459293">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 4.6.0">
@@ -37,11 +37,11 @@
 
     <script data-cfasync="false">(function(){var cl=document.documentElement.classList,ls=localStorage.getItem("retype_scheme"),hd=cl.contains("dark"),hl=cl.contains("light"),wm=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(ls==="dark"||(!ls&&wm&&!hd&&!hl)){cl.remove("light");cl.add("dark")}else if(ls==="light"||(!ls&&!wm&&!hd&&!hl)){cl.remove("dark");cl.add("light")}})();</script>
 
-    <link href="../resources/css/retype.css?v=4.6.0.836760048834" rel="stylesheet">
+    <link href="../resources/css/retype.css?v=4.6.0.836760459293" rel="stylesheet">
 
-    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.836760048834" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.836760459293" data-turbo-eval="false" defer></script>
     <script data-cfasync="false" src="../resources/js/retype.js?v=4.6.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.836760048834" data-turbo-eval="false" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.836760459293" data-turbo-eval="false" defer></script>
 </head>
 <body>
     <div id="retype-app" class="relative text-base antialiased text-base-text bg-base-bg font-body">
@@ -154,22 +154,28 @@
 <p>First, all ghost trees are processed in order of session age descending. Older ghosts are processed first. Then the stage is processed.</p>
 <p>Some events may bypass certain trees for security or sensibility reasons. For example, your personal inputs are sent to your personal ghost and then to the stage. They are never propagated to other user&#x27;s ghosts.</p>
 <p>
-<div class="card-snap-group">
-<div class="card-snap-container">
-    <a href="https://docs.cinebara.com/nodes/label/" class="group card-snap no-link">
-        <div class="card-snap-body">
+<div class="card-signal-group">
+<div class="card-signal-container">
+    <a href="../nodes/label/" class="group card-signal no-link">
+        <div class="card-signal-body">
+            <div class="card-signal-title">Label (Node)</div>
+            <p class="card-signal-description">Provides a name for a specific branch of a tree. It is useful for organization.</p>
         </div>
     </a>
 </div>
-<div class="card-snap-container">
-    <a href="https://docs.cinebara.com/nodes/transform_3d/" class="group card-snap no-link">
-        <div class="card-snap-body">
+<div class="card-signal-container">
+    <a href="../nodes/transform_3d/" class="group card-signal no-link">
+        <div class="card-signal-body">
+            <div class="card-signal-title">Transform 3D (Node)</div>
+            <p class="card-signal-description">Provides a 3D transformation to all Nodes under it.</p>
         </div>
     </a>
 </div>
-<div class="card-snap-container">
-    <a href="https://docs.cinebara.com/nodes/viewport/" class="group card-snap no-link">
-        <div class="card-snap-body">
+<div class="card-signal-container">
+    <a href="../nodes/viewport/" class="group card-signal no-link">
+        <div class="card-signal-body">
+            <div class="card-signal-title">Viewport (Node)</div>
+            <p class="card-signal-description">Provides a render target that can be drawn onto by other nodes. Paired with a Camera, it can supply a view into a Stage.</p>
         </div>
     </a>
 </div>
