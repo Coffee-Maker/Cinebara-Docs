@@ -1,4 +1,4 @@
-# Core Observations
+# UI
 In many different UI layouts, items are placed side-by-side and then distributed and aligned in some manner.
 For this layout system, we have constructed some generic primitives that accomplish this and are used by all layout modes, to handle these common behaviors in a unified way.
 
