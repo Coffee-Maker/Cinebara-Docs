@@ -2,53 +2,57 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://docs.cinebara.com/</loc>
-    <lastmod>2026-07-07T18:27:23Z</lastmod>
+    <lastmod>2026-07-07T19:48:21Z</lastmod>
   </url>
   <url>
     <loc>https://docs.cinebara.com/nodes/</loc>
-    <lastmod>2026-07-07T18:27:23Z</lastmod>
+    <lastmod>2026-07-07T19:48:21Z</lastmod>
   </url>
   <url>
     <loc>https://docs.cinebara.com/nodes/viewport/</loc>
-    <lastmod>2026-07-07T18:27:23Z</lastmod>
+    <lastmod>2026-07-07T19:48:21Z</lastmod>
   </url>
   <url>
     <loc>https://docs.cinebara.com/nodes/label/</loc>
-    <lastmod>2026-07-07T18:27:23Z</lastmod>
+    <lastmod>2026-07-07T19:48:21Z</lastmod>
   </url>
   <url>
     <loc>https://docs.cinebara.com/entities/</loc>
-    <lastmod>2026-07-07T18:27:23Z</lastmod>
-  </url>
-  <url>
-    <loc>https://docs.cinebara.com/nodes/transform_3d/</loc>
-    <lastmod>2026-07-07T18:27:23Z</lastmod>
+    <lastmod>2026-07-07T19:48:21Z</lastmod>
   </url>
   <url>
     <loc>https://docs.cinebara.com/input/</loc>
-    <lastmod>2026-07-07T18:27:23Z</lastmod>
+    <lastmod>2026-07-07T19:48:21Z</lastmod>
   </url>
   <url>
     <loc>https://docs.cinebara.com/stages/</loc>
-    <lastmod>2026-07-07T18:27:23Z</lastmod>
+    <lastmod>2026-07-07T19:48:21Z</lastmod>
+  </url>
+  <url>
+    <loc>https://docs.cinebara.com/nodes/transform_3d/</loc>
+    <lastmod>2026-07-07T19:48:21Z</lastmod>
   </url>
   <url>
     <loc>https://docs.cinebara.com/interface/</loc>
-    <lastmod>2026-07-07T18:27:23Z</lastmod>
+    <lastmod>2026-07-07T19:48:21Z</lastmod>
+  </url>
+  <url>
+    <loc>https://docs.cinebara.com/nodes/camera/</loc>
+    <lastmod>2026-07-07T19:48:21Z</lastmod>
   </url>
   <url>
     <loc>https://docs.cinebara.com/sessions/</loc>
-    <lastmod>2026-07-07T18:27:23Z</lastmod>
+    <lastmod>2026-07-07T19:48:21Z</lastmod>
   </url>
   <url>
     <loc>https://docs.cinebara.com/ui/</loc>
-    <lastmod>2026-07-07T18:27:23Z</lastmod>
-  </url>
-  <url>
-    <loc>https://docs.cinebara.com/tags/under_discussion/</loc>
+    <lastmod>2026-07-07T19:48:21Z</lastmod>
   </url>
   <url>
     <loc>https://docs.cinebara.com/categories/nodes/</loc>
+  </url>
+  <url>
+    <loc>https://docs.cinebara.com/tags/under_discussion/</loc>
   </url>
   <url>
     <loc>https://docs.cinebara.com/tags/not_implemented/</loc>

@@ -1,4 +1,4 @@
-# Label (Node)
+# Label
 
 Provides a name for a specific branch of a tree. It is useful for organization.
 

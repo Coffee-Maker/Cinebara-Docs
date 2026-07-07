@@ -13,6 +13,7 @@
 
 ## Nodes
 
-- [Label (Node)](https://docs.cinebara.com/nodes/label.md): Provides a name for a specific branch of a tree. It is useful for organization.
+- [Camera](https://docs.cinebara.com/nodes/camera.md): Defines a view into a stage. As it stands, a camera supports either Orthographic of Perspective projections but other projections will likely be added with time.
+- [Label](https://docs.cinebara.com/nodes/label.md): Provides a name for a specific branch of a tree. It is useful for organization.
 - [Transform 3D (Node)](https://docs.cinebara.com/nodes/transform_3d.md): Provides a 3D transformation to all Nodes under it.
 - [Viewport (Node)](https://docs.cinebara.com/nodes/viewport.md): Provides a render target that can be drawn onto by other nodes. Paired with a Camera, it can supply a view into a Stage.
