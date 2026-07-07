@@ -18,13 +18,11 @@ Users may establish direct connections with eachother for unreliable data stream
 
 In the event that the master is lost, perhaps due to a crash, a user is chosen to assume the role of master.
 
+---
+
 !!!question
 - How do you create a session?
 - Can a session host multiple stages?
 - Is this where Entities are collaboratively edited?
 - How do we choose a new master when the old one is lost?
 !!!
-
-# Limbo
-
-A node that is not inside of a session's trees is considered to be in "Limbo". A node may be intentionally placed in Limbo to temporarily hide it and potentially bring it back. This concept is used for Entities, where disconnecting the tree of an entity and the stage is an important concept for protecting the content of the entity.

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.836705070094">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.836758314486">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 4.6.0">
@@ -15,12 +15,12 @@
     <meta name="description" content="An entity is some separate tree that does not exist in a Stage's tree but is referenced by some node within the Stage's tree. The node that sits in the">
 
     <!-- Canonical -->
-    <link rel="canonical" href="https://docs.cinebara.com/cinebara_structure/">
+    <link rel="canonical" href="https://docs.cinebara.com/entities/">
     <link rel="sitemap" type="application/xml" title="Sitemap" href="https://docs.cinebara.com/sitemap.xml">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://docs.cinebara.com/cinebara_structure/">
+    <meta property="og:url" content="https://docs.cinebara.com/entities/">
     <meta property="og:title" content="Entities">
     <meta property="og:description" content="An entity is some separate tree that does not exist in a Stage's tree but is referenced by some node within the Stage's tree. The node that sits in the">
     <meta property="og:site_name" content="Cinebara">
@@ -28,20 +28,20 @@
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://docs.cinebara.com/cinebara_structure/">
+    <meta name="twitter:url" content="https://docs.cinebara.com/entities/">
     <meta name="twitter:title" content="Entities">
     <meta name="twitter:description" content="An entity is some separate tree that does not exist in a Stage's tree but is referenced by some node within the Stage's tree. The node that sits in the">
 
     <!-- Alternate Markdown -->
-    <link rel="alternate" type="text/markdown" href="https://docs.cinebara.com/cinebara_structure.md">
+    <link rel="alternate" type="text/markdown" href="https://docs.cinebara.com/entities.md">
 
     <script data-cfasync="false">(function(){var cl=document.documentElement.classList,ls=localStorage.getItem("retype_scheme"),hd=cl.contains("dark"),hl=cl.contains("light"),wm=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(ls==="dark"||(!ls&&wm&&!hd&&!hl)){cl.remove("light");cl.add("dark")}else if(ls==="light"||(!ls&&!wm&&!hd&&!hl)){cl.remove("dark");cl.add("light")}})();</script>
 
-    <link href="../resources/css/retype.css?v=4.6.0.836705070094" rel="stylesheet">
+    <link href="../resources/css/retype.css?v=4.6.0.836758314486" rel="stylesheet">
 
-    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.836705070094" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.836758314486" data-turbo-eval="false" defer></script>
     <script data-cfasync="false" src="../resources/js/retype.js?v=4.6.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.836705070094" data-turbo-eval="false" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.836758314486" data-turbo-eval="false" defer></script>
 </head>
 <body>
     <div id="retype-app" class="relative text-base antialiased text-base-text bg-base-bg font-body">
@@ -136,19 +136,6 @@
 <h1 id="entities">Entities</h1>
 <p>An entity is some separate tree that does not exist in a Stage&#x27;s tree but is referenced by some node within the Stage&#x27;s tree. The node that sits in the Stage is called an Entity Instance and exposes a dynamic set of configurable properties that allow data to be shared between the Stage and the Entity.</p>
 <p>Events like ticks or inputs being received by an Entity Instance are propagated to their referenced Entity root.</p>
-<h1 id="ghosts">Ghosts</h1>
-<p>A ghost is a tree in a session that represents a user connected to that session. A user acting via a ghost can interact with the Stage with limited access.</p>
-<h1 id="process-order">Process order</h1>
-<p>Events like &quot;Actions&quot; and &quot;Ticks&quot; need to be distributed to the nodes of a session. This is done one tree at a time, and for each tree you broadcast depth first.</p>
-<div id="process-order-code-1" class="codeblock-wrapper"><doc-codeblock>
-<pre translate="no" class="language-none"><code v-pre class="language-none">function broadcast_to(node, event_to_run)
-    for each child of node
-        broadcast_to(child)
-    event_to_run.execute</code></pre>
-</doc-codeblock></div>
-<p>This can also be thought of as &quot;ascending the tree&quot;, though this phrase can be confusing as trees are usually depicted upside-down. You ascend from the root to the leaf nodes, but you descend down the tree as depicted in a GUI.</p>
-<p>First, all ghost trees are processed in order of session age descending. Older ghosts are processed first. Then the stage is processed.</p>
-<p>Some events may bypass certain trees for security or sensibility reasons. For example, your personal inputs are sent to your personal ghost and then to the stage. They are never propagated to other user&#x27;s ghosts.</p>
 
                 
                 <!-- Required only on API pages -->
@@ -158,11 +145,11 @@
             
                 <nav id="retype-nextprev" class="print:hidden flex mt-14">
                     <div class="w-1/2">
-                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-body-link border border-base-border hover:border-base-border-hover rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../">
+                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-body-link border border-base-border hover:border-base-border-hover rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../nodes/viewport/">
                             <svg xmlns="http://www.w3.org/2000/svg" class="mr-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19 11H7.41l5.29-5.29a.996.996 0 10-1.41-1.41l-7 7a1 1 0 000 1.42l7 7a1.024 1.024 0 001.42-.01.996.996 0 000-1.41L7.41 13H19c.55 0 1-.45 1-1s-.45-1-1-1z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
                             <span>
                                 <span class="block text-xs font-normal text-base-text-muted">Previous</span>
-                                <span class="block mt-1">Cinebara Docs</span>
+                                <span class="block mt-1">Viewport (Node)</span>
                             </span>
                         </a>
                     </div>
@@ -215,6 +202,6 @@
 
     <div id="retype-overlay-target"></div>
 
-        <script data-cfasync="false">window.__DOCS__ = { "title": "Entities", level: 1, icon: "file", hasPrism: false, hasInstagram: false, hasMermaid: false, hasMath: false, tocDepth: 23, "md": "/cinebara_structure.md" }</script>
+        <script data-cfasync="false">window.__DOCS__ = { "title": "Entities", level: 1, icon: "file", hasPrism: false, hasInstagram: false, hasMermaid: false, hasMath: false, tocDepth: 23, "md": "/entities.md" }</script>
 </body>
 </html>
