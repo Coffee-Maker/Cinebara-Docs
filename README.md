@@ -1,10 +1,7 @@
 ---
+github: It seems you might be reading this on Github... you may be looking for the [actual docs website](https://docs.cinebara.com).
 order: 100
 ---
-
-<!--
-It seems you might be reading this on Github... you may be looking for the [actual docs website](https://docs.cinebara.com).
--->
 
 # Welcome
 
