@@ -10,30 +10,30 @@
     <meta name="generator" content="Retype 4.6.0">
 
     <!-- Primary Meta Tags -->
-    <title>Interface</title>
-    <meta name="title" content="Interface">
-    <meta name="description" content="UI is not yet implemented">
+    <title>Security</title>
+    <meta name="title" content="Security">
+    <meta name="description" content="Promises, contracts, and disclaimers that curious users may be interested to know about.">
 
     <!-- Canonical -->
-    <link rel="canonical" href="https://docs.cinebara.com/interface/">
+    <link rel="canonical" href="https://docs.cinebara.com/security/">
     <link rel="sitemap" type="application/xml" title="Sitemap" href="https://docs.cinebara.com/sitemap.xml">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://docs.cinebara.com/interface/">
-    <meta property="og:title" content="Interface">
-    <meta property="og:description" content="UI is not yet implemented">
+    <meta property="og:url" content="https://docs.cinebara.com/security/">
+    <meta property="og:title" content="Security">
+    <meta property="og:description" content="Promises, contracts, and disclaimers that curious users may be interested to know about.">
     <meta property="og:site_name" content="Cinebara">
     <meta property="og:locale" content="en_US">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://docs.cinebara.com/interface/">
-    <meta name="twitter:title" content="Interface">
-    <meta name="twitter:description" content="UI is not yet implemented">
+    <meta name="twitter:url" content="https://docs.cinebara.com/security/">
+    <meta name="twitter:title" content="Security">
+    <meta name="twitter:description" content="Promises, contracts, and disclaimers that curious users may be interested to know about.">
 
     <!-- Alternate Markdown -->
-    <link rel="alternate" type="text/markdown" href="https://docs.cinebara.com/interface.md">
+    <link rel="alternate" type="text/markdown" href="https://docs.cinebara.com/security.md">
 
     <script data-cfasync="false">(function(){var cl=document.documentElement.classList,ls=localStorage.getItem("retype_scheme"),hd=cl.contains("dark"),hl=cl.contains("light"),wm=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(ls==="dark"||(!ls&&wm&&!hd&&!hl)){cl.remove("light");cl.add("dark")}else if(ls==="light"||(!ls&&!wm&&!hd&&!hl)){cl.remove("dark");cl.add("light")}})();</script>
 
@@ -133,7 +133,41 @@
                 <doc-page-actions></doc-page-actions>
 
                 <!-- Page content  -->
-<h1 id="interface">Interface</h1>
+<h1 id="security">Security</h1>
+<div id="retype-page-description" class="description-display text-description font-description leading-description mb-description-margin-bottom mt-description-margin-top tracking-description text-transform-description">Promises, contracts, and disclaimers that curious users may be interested to know about.</div>
+<p>While Cinebara has no need for security features right now, in anticipation of a day where it becomes more widespread and people can freely move between <a href="../sessions/">Sessions</a>, considerations are made for what someone (potentially a bad actor) may have access to.</p>
+<p>This concerns span from internal management of refences that could be exploited through the in-world editing system, to the in-world permission system itself, where a session host may have authority over what other users may do.</p>
+<hr>
+<h1 id="promises">Promises</h1>
+<p>Before we get to the real security stuff, let&#x27;s lay out some promises. A &quot;promise&quot; is more of a conceptual thing, It&#x27;s a pinky promise that we will try our hardest to maintain. Most of these are less technical and more user-facing.</p>
+<h3 id="sources-will-be-readable">Sources will be readable</h3>
+<p>The plan for how Cinebara will be open-sourced is under discussion, but so far everyone agrees that the source should be public facing.</p>
+<h3 id="modders-are-allowed-to-mod">Modders are allowed to mod</h3>
+<p>We can not account for absolutely everyone&#x27;s use case. Custom clients are expected regardless of if we &quot;allow&quot; them. Pushing the VR film industry forward is the goal of Cinebara and choking innovation by disallowing mods would be counter to that goal.</p>
+<hr>
+<h1 id="contracts">Contracts</h1>
+<p>A &quot;Contract&quot; is an absolute rule arbitrarily defined for Cinebara&#x27;s operational safety. They are in place to avoid security footguns or to improve general usability and stability. Typically, a contract has the goal of limiting access to something but some contracts may specifically aim to permit access as to avoid ambiguity.</p>
+<h3 id="transparent-relationships">Transparent Relationships</h3>
+<p>Requesting a Node&#x27;s children or parent must report an accurate result for the request. Never should a Node pretend it has no Children, or hide its Parent.</p>
+<p>Such responses could result in a Node&#x27;s intentions becoming unclear. If a Node intends to send an event to all of its children then the User should be sure that it does that. This concept extends to parents.</p>
+<p>The consequence of this is that an entire Tree is readable if you have a reference to just one Node in that Tree.</p>
+<h3 id="hidden-ghost">Hidden Ghosts</h3>
+<p>Nodes that are a part of a <a href="../nodes/#ghosts">Ghost&#x27;s</a> tree must not be accessed by a Stage.</p>
+<p>Modification of a Ghost could be a malicious attack vector. A Ghost must be a safe object for the User and so a User must remain completely in control of it.</p>
+<p><em>Personal Characters may also be in this Tree, but this is under discussion.</em></p>
+<h3 id="no-foreign-tree-references">No Foreign Tree References</h3>
+<p>A Property should never hold a reference to a Node which belongs to a different Tree than the Property is a part of.</p>
+<p>Access to one Node in a different tree provides access to the entire Tree that Node belongs to. Such access violates the <doc-anchor-trigger to="#hidden-ghosts">Hidden Ghosts</doc-anchor-trigger> contract.</p>
+<hr>
+<h1 id="disclaimers">Disclaimers</h1>
+<p>Finally, a &quot;Disclaimer&quot; is everything we would like to promise, but realistically can&#x27;t. All of these are things we will try to avoid but if the result is a benefit for Cinebara then we may well do it.</p>
+<h3 id="breaking-changes">Breaking Changes</h3>
+<p>Cinebara&#x27;s primary goal is to push the industry forward. The best way to afford that is to be flexible with development. We&#x27;re a small team and our reasoning is not perfect. If it turns out that changing something would benefit the engine as a whole, it is likely we will make that change.</p>
+<p><em>Note: We will try to write upgrade mechanisms to smooth out these situations, but matching behaviour is not guaranteed.</em></p>
+<h3 id="engine-instability">Engine Instability</h3>
+<p>Especially during the early development, you can expect crashes and unexpected behaviour. We encourage you to communicate your struggles to us and we can promise to work towards a more stable future, but for now... make frequent backups.</p>
+<hr>
+<h1 id="roles">Roles</h1>
 <div class="flex mb-6">
     <div class="shrink-0 w-1.5 rounded-tl-lg rounded-bl-lg bg-callout-warning"></div>
     <div class="flex w-full py-4 border border-l-0 rounded-tr-lg rounded-br-lg doc-callout bg-callout-base-bg border-callout-base-border" role="alert">
@@ -146,24 +180,55 @@
             </svg>
         </div>
         <div class="pr-5 ml-3 w-full">
-<p>UI is not yet implemented</p>
+<p>The permission system &amp; roles are not yet implemented</p>
         </div>
     </div>
 </div>
-<p>The UI of Cinebara is built from the same system as in-world UI. The structure is something like this:</p>
-<div id="interface-code-1" class="codeblock-wrapper"><doc-codeblock>
-<pre translate="no" class="language-none"><code v-pre class="language-none">main window
-    menu
-        menus
-        viewport (referencing the local ghost camera of the loaded session)
-    loaded session
-
-local ghost
-    camera
-
-stage</code></pre>
-</doc-codeblock></div>
-<p>Since Cinebara has dockable windows and potentially multiple loaded sessions, this structure is dynamic and may change based on user configuration and context.</p>
+<p>As with most permission systems, users are given roles that afford them abilities.</p>
+<hr>
+<h1 id="open-concerns">Open Concerns</h1>
+<div class="flex mb-6">
+    <div class="shrink-0 w-1.5 rounded-tl-lg rounded-bl-lg bg-callout-question"></div>
+    <div class="flex w-full py-4 border border-l-0 rounded-tr-lg rounded-br-lg doc-callout bg-callout-base-bg border-callout-base-border" role="alert">
+        <div class="flex items-center ml-4 h-7">
+            <svg xmlns="http://www.w3.org/2000/svg" class="block text-callout-question" width="22" height="22" viewBox="0 0 24 24" role="presentation">
+                <g fill="currentColor"><g>
+                    <path d="M20 11C20 6.02944 15.9706 2 11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20C15.9706 20 20 15.9706 20 11ZM22 11C22 17.0751 17.0751 22 11 22C4.92487 22 0 17.0751 0 11C0 4.92487 4.92487 0 11 0C17.0751 0 22 4.92487 22 11Z"></path>
+                    <path d="M8.89368 5.54722C9.70794 5.06874 10.665 4.8935 11.5958 5.05308C12.5267 5.21276 13.3713 5.6968 13.9796 6.41929C14.5877 7.14169 14.9212 8.0561 14.92 9.00035L14.9074 9.28062C14.7798 10.6552 13.7345 11.5758 12.9747 12.0824C12.5393 12.3727 12.1107 12.5857 11.795 12.7259C11.6358 12.7967 11.5011 12.8503 11.4044 12.8871C11.3561 12.9055 11.3167 12.9199 11.2882 12.93C11.2741 12.9351 11.2628 12.9397 11.254 12.9427C11.2498 12.9442 11.2462 12.9457 11.2433 12.9466C11.242 12.9471 11.2404 12.9473 11.2394 12.9476L11.2374 12.9486H11.2365L11.1378 12.9759C10.6432 13.087 10.1346 12.8071 9.97083 12.3158C9.79672 11.7926 10.0791 11.2264 10.6017 11.0511V11.0521L10.6036 11.0511C10.6063 11.0502 10.6113 11.0487 10.6183 11.0462C10.6336 11.0408 10.6591 11.0316 10.6925 11.0189C10.7599 10.9932 10.8606 10.953 10.9825 10.8988C11.2293 10.7891 11.551 10.6279 11.8654 10.4183C12.5548 9.95872 12.9198 9.46936 12.92 9.00035V8.9984L12.9122 8.82261C12.8768 8.41362 12.7165 8.02363 12.4503 7.70738C12.1461 7.34604 11.7235 7.10364 11.2579 7.02379C10.7925 6.944 10.3135 7.03158 9.90638 7.27086C9.49929 7.51011 9.1901 7.88601 9.03333 8.3314L8.99427 8.42613C8.7787 8.88497 8.24645 9.11555 7.75794 8.94371C7.23704 8.76045 6.96349 8.18924 7.14661 7.66832L7.20911 7.5023C7.53839 6.68391 8.1303 5.99587 8.89368 5.54722Z"></path>
+                    <path d="M11.0098 15L11.1123 15.0049C11.6165 15.0561 12.0098 15.4822 12.0098 16C12.0098 16.5178 11.6165 16.9439 11.1123 16.9951L11.0098 17H11C10.4477 17 10 16.5523 10 16C10 15.4477 10.4477 15 11 15H11.0098Z"></path>
+                </g></g>
+            </svg>
+        </div>
+        <div class="pr-5 ml-3 w-full">
+            <h5>Modified Clients</h5>
+<p>If a user has a modified client, how can we protect other users from having their input events scrubbed?</p>
+<p>Can we protect users from having their assets stolen easily this way? Encryption of some kind? I find it unlikely.
+Maybe we can protect against the same content being uploaded twice? Not if the assets are decentralized, though.</p>
+<p>I believe it is fine to allow modified clients in some cases but not others. If a User knows all of the people they will be interacting with, then trying to protect them might be a bit of an overstep. Some Sessions could be made to allow modified clients, while others, perhaps the public sessions, do not?</p>
+<p>How do you even check for a modified client? A checksum can just be spoofed.</p>
+<p>Perhaps you can only connect to Sessions if you have an account and we use moderation. A user who mods for convenience should not be punished as though they were malicious. But you can&#x27;t really detect if malicious activity is happening.</p>
+        </div>
+    </div>
+</div>
+<div class="flex mb-6">
+    <div class="shrink-0 w-1.5 rounded-tl-lg rounded-bl-lg bg-callout-question"></div>
+    <div class="flex w-full py-4 border border-l-0 rounded-tr-lg rounded-br-lg doc-callout bg-callout-base-bg border-callout-base-border" role="alert">
+        <div class="flex items-center ml-4 h-7">
+            <svg xmlns="http://www.w3.org/2000/svg" class="block text-callout-question" width="22" height="22" viewBox="0 0 24 24" role="presentation">
+                <g fill="currentColor"><g>
+                    <path d="M20 11C20 6.02944 15.9706 2 11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20C15.9706 20 20 15.9706 20 11ZM22 11C22 17.0751 17.0751 22 11 22C4.92487 22 0 17.0751 0 11C0 4.92487 4.92487 0 11 0C17.0751 0 22 4.92487 22 11Z"></path>
+                    <path d="M8.89368 5.54722C9.70794 5.06874 10.665 4.8935 11.5958 5.05308C12.5267 5.21276 13.3713 5.6968 13.9796 6.41929C14.5877 7.14169 14.9212 8.0561 14.92 9.00035L14.9074 9.28062C14.7798 10.6552 13.7345 11.5758 12.9747 12.0824C12.5393 12.3727 12.1107 12.5857 11.795 12.7259C11.6358 12.7967 11.5011 12.8503 11.4044 12.8871C11.3561 12.9055 11.3167 12.9199 11.2882 12.93C11.2741 12.9351 11.2628 12.9397 11.254 12.9427C11.2498 12.9442 11.2462 12.9457 11.2433 12.9466C11.242 12.9471 11.2404 12.9473 11.2394 12.9476L11.2374 12.9486H11.2365L11.1378 12.9759C10.6432 13.087 10.1346 12.8071 9.97083 12.3158C9.79672 11.7926 10.0791 11.2264 10.6017 11.0511V11.0521L10.6036 11.0511C10.6063 11.0502 10.6113 11.0487 10.6183 11.0462C10.6336 11.0408 10.6591 11.0316 10.6925 11.0189C10.7599 10.9932 10.8606 10.953 10.9825 10.8988C11.2293 10.7891 11.551 10.6279 11.8654 10.4183C12.5548 9.95872 12.9198 9.46936 12.92 9.00035V8.9984L12.9122 8.82261C12.8768 8.41362 12.7165 8.02363 12.4503 7.70738C12.1461 7.34604 11.7235 7.10364 11.2579 7.02379C10.7925 6.944 10.3135 7.03158 9.90638 7.27086C9.49929 7.51011 9.1901 7.88601 9.03333 8.3314L8.99427 8.42613C8.7787 8.88497 8.24645 9.11555 7.75794 8.94371C7.23704 8.76045 6.96349 8.18924 7.14661 7.66832L7.20911 7.5023C7.53839 6.68391 8.1303 5.99587 8.89368 5.54722Z"></path>
+                    <path d="M11.0098 15L11.1123 15.0049C11.6165 15.0561 12.0098 15.4822 12.0098 16C12.0098 16.5178 11.6165 16.9439 11.1123 16.9951L11.0098 17H11C10.4477 17 10 16.5523 10 16C10 15.4477 10.4477 15 11 15H11.0098Z"></path>
+                </g></g>
+            </svg>
+        </div>
+        <div class="pr-5 ml-3 w-full">
+            <h5>Licensed Assets</h5>
+<p>How should we hide access to licensed assets? If a user imports something they own, can we protect it? I think the answer is no, generally, but we can make it inconvenient. And from the perspective of a &quot;good&quot; actor, the ability to save the item to a known location on disc should not be present. Maybe the locally cached version should be encrypted or obfuscated, even.</p>
+<p>I believe we fundamentally can not protect someone&#x27;s assets, no matter what. No app can.</p>
+        </div>
+    </div>
+</div>
 
                 
                 <!-- Required only on API pages -->
@@ -173,20 +238,20 @@ stage</code></pre>
             
                 <nav id="retype-nextprev" class="print:hidden flex mt-14">
                     <div class="w-1/2">
-                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-body-link border border-base-border hover:border-base-border-hover rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../input/">
+                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-body-link border border-base-border hover:border-base-border-hover rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../interface/">
                             <svg xmlns="http://www.w3.org/2000/svg" class="mr-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19 11H7.41l5.29-5.29a.996.996 0 10-1.41-1.41l-7 7a1 1 0 000 1.42l7 7a1.024 1.024 0 001.42-.01.996.996 0 000-1.41L7.41 13H19c.55 0 1-.45 1-1s-.45-1-1-1z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
                             <span>
                                 <span class="block text-xs font-normal text-base-text-muted">Previous</span>
-                                <span class="block mt-1">Input</span>
+                                <span class="block mt-1">Interface</span>
                             </span>
                         </a>
                     </div>
             
                     <div class="w-1/2">
-                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-body-link border border-base-border hover:border-base-border-hover rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../security/">
+                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-body-link border border-base-border hover:border-base-border-hover rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../sessions/">
                             <span>
                                 <span class="block text-xs font-normal text-right text-base-text-muted">Next</span>
-                                <span class="block mt-1">Security</span>
+                                <span class="block mt-1">Sessions</span>
                             </span>
                             <svg xmlns="http://www.w3.org/2000/svg" class="ml-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19.92 12.38a1 1 0 00-.22-1.09l-7-7a.996.996 0 10-1.41 1.41l5.3 5.3H5c-.55 0-1 .45-1 1s.45 1 1 1h11.59l-5.29 5.29a.996.996 0 000 1.41c.19.2.44.3.7.3s.51-.1.71-.29l7-7c.09-.09.16-.21.21-.33z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
                         </a>
@@ -230,6 +295,6 @@ stage</code></pre>
 
     <div id="retype-overlay-target"></div>
 
-        <script data-cfasync="false">window.__DOCS__ = { "title": "Interface", level: 1, icon: "file", hasPrism: false, hasInstagram: false, hasMermaid: false, hasMath: false, tocDepth: 23, "md": "/interface.md" }</script>
+        <script data-cfasync="false">window.__DOCS__ = { "title": "Security", level: 1, icon: "file", hasPrism: false, hasInstagram: false, hasMermaid: false, hasMath: false, tocDepth: 23, "md": "/security.md" }</script>
 </body>
 </html>
