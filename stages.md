@@ -1,3 +1,7 @@
+---
+description: An environment to build or perform on.
+---
+
 # Stages
 
 A Stage holds the content of a [Session](sessions.md) and is also the thing you conceptually save (when closing a session) and load (when starting a session). Stages can be edited and performed on entirely within Cinebara.

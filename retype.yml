@@ -11,6 +11,9 @@ branding:
 #   copyright: "&copy; Copyright . All rights reserved."
 
 
+start:
+  pro: true
+
 lastUpdated:
   date:
     enabled: true

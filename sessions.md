@@ -1,3 +1,7 @@
+---
+description: "A container for a Stage to be performed on or edited by networked collaborators."
+---
+
 # Sessions
 
 A session holds a loaded instance of a [Stage](stages.md) and may be networked. Fundamentally, a session exists to provide access to a Stage.

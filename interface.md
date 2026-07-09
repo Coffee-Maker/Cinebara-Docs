@@ -8,14 +8,15 @@ The UI of Cinebara is built from the same system as in-world UI. The structure i
 
 ```
 main window
-    layout
+    menu
         menus
         viewport (referencing the local ghost camera of the loaded session)
+    loaded session
 
-loaded session
-    local ghost
-        camera
-    stage
+local ghost
+    camera
+
+stage
 ```
 
 Since Cinebara has dockable windows and potentially multiple loaded sessions, this structure is dynamic and may change based on user configuration and context.

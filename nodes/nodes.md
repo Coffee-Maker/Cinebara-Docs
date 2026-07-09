@@ -1,23 +1,27 @@
 ---
 order: 100
 expanded: false
+description: The building block of a Stage, Nodes provide structure and behaviour and are oganized in a tree.
 ---
+
 # Nodes
 
 A Node is a thing which may have other Nodes as children. A Node's parent is the singular Node that it is a child of. A Node can not have more than one parent, but it may have no parent at all.
 
-# Trees {#trees}
+# Trees
 A Node with no parent is considered the root of its tree. A tree is all Nodes descendant of a root Node and the root itself. A Node's relationships (its parent & children) are always transparent, as in, they are always readable.
 
 There are many types of Nodes, all of which have their own specific purpose. As a general rule, a Node should have at most one purpose.
 
 # Ghosts
 
-A ghost is a tree in a session that represents a user connected to that session. A user acting via a ghost can interact with the Session's Stage with limited access (Just enough to "escape" limbo).
+A ghost is a tree in a session that represents a user connected to that session. A user acting via a ghost can interact with the Session's Stage with limited access (Just enough to "escape" [Limbo](#limbo)).
 
 # Limbo
 
 A node that is not inside of the Stage tree is considered to be in "Limbo". A Node may be intentionally placed in Limbo to temporarily hide it and potentially bring it back. This concept is used for Entities, where disconnecting the tree of an entity and the stage is an important concept for protecting the content of the entity.
+
+# Properties
 
 # Process order
 
@@ -37,6 +41,8 @@ Processing happens in this order:
 1. The Cinebara UI
 2. All ghosts in the loaded session (oldest first)
 3. The loaded session's stage tree
+
+# A list of Nodes
 
 {{ for page in content.categories["nodes"].pages ~}}
 [!card layout="signal"]({{ page.path }})
