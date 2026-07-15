@@ -6,6 +6,7 @@
 - [Welcome](https://docs.cinebara.com/readme.md): Welcome
 - [Entities](https://docs.cinebara.com/entities.md): An entity is some separate tree that does not exist in a Stage's tree but is referenced by some node within the Stage's tree. The node that sits in the
 - [Features](https://docs.cinebara.com/features.md): A list of features that are either planned or implemented.
+- [Gizmos](https://docs.cinebara.com/gizmos.md): A gizmo is an interactable overlay used while editing a Stage. There are many types and they serve as a more convenient way to edit node properties.
 - [Input](https://docs.cinebara.com/input.md): Raw inputs are transformed into Actions via a series of Action Generators. An Action Generator can be though of as a keybind, something that turns a raw input concept (Like pressing the W key) into an Action with a purpose (Like "move forward").
 - [Interface](https://docs.cinebara.com/interface.md): UI is not yet implemented
 - [Rendering](https://docs.cinebara.com/rendering/rendering.md): Describes the general process for rendering the Cinebara window.
