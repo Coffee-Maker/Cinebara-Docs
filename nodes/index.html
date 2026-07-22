@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.837402104778">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.838072676393">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 4.6.0">
@@ -37,11 +37,11 @@
 
     <script data-cfasync="false">(function(){var cl=document.documentElement.classList,ls=localStorage.getItem("retype_scheme"),hd=cl.contains("dark"),hl=cl.contains("light"),wm=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(ls==="dark"||(!ls&&wm&&!hd&&!hl)){cl.remove("light");cl.add("dark")}else if(ls==="light"||(!ls&&!wm&&!hd&&!hl)){cl.remove("dark");cl.add("light")}})();</script>
 
-    <link href="../resources/css/retype.css?v=4.6.0.837402104778" rel="stylesheet">
+    <link href="../resources/css/retype.css?v=4.6.0.838072676393" rel="stylesheet">
 
-    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.837402104778" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.838072676393" data-turbo-eval="false" defer></script>
     <script data-cfasync="false" src="../resources/js/retype.js?v=4.6.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.837402104778" data-turbo-eval="false" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.838072676393" data-turbo-eval="false" defer></script>
 </head>
 <body>
     <div id="retype-app" class="relative text-base antialiased text-base-text bg-base-bg font-body">
@@ -139,6 +139,8 @@
 <h1 id="trees">Trees</h1>
 <p>A Node with no parent is considered the root of its tree. A tree is all Nodes descendant of a root Node and the root itself. A Node&#x27;s relationships (its parent &amp; children) are always transparent, as in, they are always readable.</p>
 <p>There are many types of Nodes, all of which have their own specific purpose. As a general rule, a Node should have at most one purpose.</p>
+<h2 id="tree-diffs">Tree diffs</h2>
+<p>Trees can be compared to see what differences they have, a process called &quot;diffing&quot;. The result of diffing is a &quot;diff&quot;, a list of changes that need to be made to go from one tree to another.</p>
 <h1 id="ghosts">Ghosts</h1>
 <p>A ghost is a tree in a session that represents a user connected to that session. A user acting via a ghost can interact with the Session&#x27;s Stage with limited access (Just enough to &quot;escape&quot; <doc-anchor-trigger to="#limbo">Limbo</doc-anchor-trigger>).</p>
 <h1 id="limbo">Limbo</h1>
@@ -190,7 +192,7 @@
     <a href="../nodes/viewport/" class="group card-signal no-link">
         <div class="card-signal-body">
             <div class="card-signal-title">Viewport (Node)</div>
-            <p class="card-signal-description">Provides a render target that can be drawn onto by other nodes. Paired with a Camera, it can supply a view into a Stage.</p>
+            <p class="card-signal-description">A list of render targets and cameras which should be used to render into those targets.</p>
         </div>
     </a>
 </div>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark">
-    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.837402104778">
+    <meta name="turbo-cache-control" content="no-cache" data-turbo-track="reload" data-track-token="4.6.0.838072676393">
 
     <!-- See retype.com -->
     <meta name="generator" content="Retype 4.6.0">
@@ -37,13 +37,15 @@
 
     <script data-cfasync="false">(function(){var cl=document.documentElement.classList,ls=localStorage.getItem("retype_scheme"),hd=cl.contains("dark"),hl=cl.contains("light"),wm=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;if(ls==="dark"||(!ls&&wm&&!hd&&!hl)){cl.remove("light");cl.add("dark")}else if(ls==="light"||(!ls&&!wm&&!hd&&!hl)){cl.remove("dark");cl.add("light")}})();</script>
 
-    <link href="../resources/css/retype.css?v=4.6.0.837402104778" rel="stylesheet">
+    <link href="../resources/css/retype.css?v=4.6.0.838072676393" rel="stylesheet">
 
-    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.837402104778" data-turbo-eval="false" defer></script>
+    <script data-cfasync="false" src="../resources/js/config.js?v=4.6.0.838072676393" data-turbo-eval="false" defer></script>
     <script data-cfasync="false" src="../resources/js/retype.js?v=4.6.0" data-turbo-eval="false" defer></script>
-    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.837402104778" data-turbo-eval="false" defer></script>
-    <script id="prism-js" data-cfasync="false" src="../resources/js/prism.js?v=4.6.0.837402104778" defer></script>
+    <script id="lunr-js" data-cfasync="false" src="../resources/js/lunr.js?v=4.6.0.838072676393" data-turbo-eval="false" defer></script>
+    <script id="prism-js" data-cfasync="false" src="../resources/js/prism.js?v=4.6.0.838072676393" defer></script>
     <script id="mermaid-js" data-cfasync="false" src="../resources/js/mermaid.js?v=4.6.0" defer></script>
+    <link href="../resources/css/katex.css?v=4.6.0" rel="stylesheet">
+    <script id="katex-js" data-cfasync="false" src="../resources/js/katex.js?v=4.6.0" defer></script>
 </head>
 <body>
     <div id="retype-app" class="relative text-base antialiased text-base-text bg-base-bg font-body">
@@ -436,7 +438,14 @@ var draws: array&lt;IndirectIndexedDraw&gt;;</code></pre>
 <p>To make this easier to follow, I will work from the smallest concept up to the full data structure.</p>
 <h2 id="a-single-cluster">A single cluster</h2>
 <p>The final data structure will hold many clusters. A cluster is a region definable with a world-space AABB which holds a list of items which may have an effect on any position sampled within its bounds. It is worth noting that the bounds of the clusters aren&#x27;t actually defined anywhere- Rather, they are a helpful tool to explain what a cluster is. The bounds do conceptually exist as each cluster is attributed to some region in world-space, but this relationship is implicitly inherited from the cascade it is within.</p>
-<p>Items are added to cells based on if the item can possibly have an effect on any position sampled within the cell. A light, for the sake of performance, has a maximum range of effect. Any light whose sphere of influence intersects the bounds of the cell should be included in the item list of the cell.</p>
+<p>Items are added to clusters based on if the item can possibly have an effect on any position sampled within the cluster. A light, for the sake of performance, has a maximum range of effect. Any light whose sphere of influence intersects the bounds of the cluster should be included in the item list of the cluster.</p>
+<div id="a-single-cluster-definition" class="codeblock-wrapper"><doc-codeblock>
+<div class="codeblock-title">Definition</div>
+<pre translate="no" class="language-wgsl"><code v-pre class="language-wgsl">struct Cluster {
+    items: array&lt;u32&gt;,
+    count: u32,
+}</code></pre>
+</doc-codeblock></div>
 <h2 id="a-single-cascade-layer">A single cascade layer</h2>
 <p>A 3D grid of clusters forms one layer of the full data structure, a &quot;cascade&quot;. Each cluster is tightly spatially packed with its neighbours. The cascade is defined with an AABB. This is where the clusters get their &quot;implicit AABB&quot; mentioned prior.</p>
 <div id="a-single-cascade-layer-definition" class="codeblock-wrapper"><doc-codeblock>
@@ -444,27 +453,28 @@ var draws: array&lt;IndirectIndexedDraw&gt;;</code></pre>
 <pre translate="no" class="language-wgsl"><code v-pre class="language-wgsl">struct ClusterCascade {
     min: vec3f,
     max: vec3f,
-    clusters: array&lt;Cluster&gt;
 }</code></pre>
 </doc-codeblock></div>
-<p>Indexing into a cascade is done as follows:</p>
-<div id="a-single-cascade-layer-code-1" class="codeblock-wrapper"><doc-codeblock>
+<p>As shown, clusters are stored in a 1D array. Each cluster is given some slice of this array. The size of a cascade&#x27;s slice is <span class="math">cascadeSize^3</span>, so given the index of the cascade, the start offset of the slice would be <span class="math">cascadeIndex\times cascadeSize^3</span></p>
+<div id="a-single-cascade-layer-getting-a-slice-into-the-clusters-array" class="codeblock-wrapper"><doc-codeblock>
+<div class="codeblock-title">Getting a slice into the Clusters array</div>
 <pre translate="no" class="language-wgsl"><code v-pre class="language-wgsl">let cascadeSize: u32 = 16u;
 
-fn getClusterIndex(cascade: ClusterCascade, position: vec3f) -&gt; u32 {
-    let uvw = (position - cascade.min) / (cascade.max - cascade.min);
-    let clusterId = floor(uvw * vec3f(cascadeSize));
-    return 
-        (clusterId.x * cascadeSize * cascadeSize) +
-        (clusterId.y * cascadeSize) +
-        clusterId.z;
+fn getClustersSlice(cascadeIndex: u32) -&gt; vec2&lt;u32&gt; {
+    let clustersSliceSize = cascadeSize * cascadeSize * cascadeSize;
+    let clustersSliceStart = cascadeIndex * clustersSliceSize;
+    return vec2(clusterSliceStart, clustersSliceSize);
 }</code></pre>
 </doc-codeblock></div>
-<p>This can then be used to access the clusters array.</p>
-<div id="a-single-cascade-layer-accessing-the-clusters-array" class="codeblock-wrapper"><doc-codeblock>
-<div class="codeblock-title">Accessing the clusters array</div>
-<pre translate="no" class="language-wgsl"><code v-pre class="language-wgsl">fn getCluster(cascade: ClusterCascade, position: vec3f) -&gt; Cluster {
-    return cascade.clusters[getClusterIndex(cluster, position)];
+<p>The slice is enough to let us index into the clusters given some xyz offset. The offset is composed of <code translate="no" v-pre>u32</code>s.</p>
+<div id="a-single-cascade-layer-getting-the-index-of-a-cluster-from-xyz-offset" class="codeblock-wrapper"><doc-codeblock>
+<div class="codeblock-title">Getting the index of a cluster from xyz offset</div>
+<pre translate="no" class="language-wgsl"><code v-pre class="language-wgsl">...
+fn clusterOffsetToIndex(offset: vec3&lt;u32&gt;) -&gt; u32 {
+    return
+        (offset.x * cascadeSize * cascadeSize) +
+        (offset.y * cascadeSize) +
+        offset.z;
 }</code></pre>
 </doc-codeblock></div>
 <div class="flex mb-6">
@@ -479,7 +489,7 @@ fn getClusterIndex(cascade: ClusterCascade, position: vec3f) -&gt; u32 {
             </svg>
         </div>
         <div class="pr-5 ml-3 w-full">
-<p>These functions assumes the position is within the bounds of the cascade.</p>
+<p>This function assumes the position is within the bounds of the cascade.</p>
         </div>
     </div>
 </div>
@@ -504,11 +514,116 @@ fn getClusterIndex(cascade: ClusterCascade, position: vec3f) -&gt; u32 {
     </div>
 </div>
 <h2 id="updating-the-clusters">Updating the clusters</h2>
+<p>All cascades are stored in a contiguous buffer which will be bound for a compute shader to write into. Alongside the cascades is an array of all of the items in the scene.</p>
+<div id="updating-the-clusters-items-structure" class="codeblock-wrapper"><doc-codeblock>
+<div class="codeblock-title">Items Structure</div>
+<pre translate="no" class="language-wgsl"><code v-pre class="language-wgsl">struct ClusterItem {
+    transform: mat4x4&lt;f32&gt;,
+    min: vec3&lt;f32&gt;,
+    max: vec3&lt;f32&gt;,
+    id: u32,
+}
+
+var&lt;storage, read&gt; items: array&lt;ClusterItem&gt;;</code></pre>
+</doc-codeblock></div>
+<p>An AABB overlap check is done for each item / cluster pair in each cascade to find which items affect which clusters.</p>
+<p>The last field in the item is <code translate="no" v-pre>id</code>. This is a bit-packed id that describes what the item and what configuration it has. More on this in the section for <doc-anchor-trigger to="#sampling-the-clusters">sampling the clusters</doc-anchor-trigger>.</p>
+<p>A compute dispatch is called once for each cascade. The compute process for updating one cascade looks something like this:</p>
+<div id="updating-the-clusters-code-1" class="codeblock-wrapper"><doc-codeblock>
+<pre translate="no" class="language-wgsl"><code v-pre class="language-wgsl">...
+// Input
+var&lt;uniform&gt; cascades: array&lt;ClusterCascade&gt;;
+var&lt;storage, read&gt; items: array&lt;ClusterItem&gt;;
+var&lt;immediate&gt; cascadeToUpdate: u32;
+
+// Output
+var&lt;storage, write&gt; clusters: array&lt;Cluster&gt;;
+
+@compute @workgroup_size(8, 8, 8)
+fn updateClusters(@builtin(global_invocation_id) id: vec3&lt;u32&gt;) {
+    let cascade = cascades[cascadeToUpdate];
+
+    let targetCluster = clusters[getClusterSlice(cascadeToUpdate).x + clusterOffsetToIndex(id)];
+    targetCluster.count = 0u;
+
+    let cascadeRegionSize = cascade.max - cascade.min;
+    let clusterRegionSize = cascadeRegionSize / clusterSize;
+    let clusterMin = cascade.min + clusterRegionSize * vec3f(id);
+    let clusterMax = clusterMin + clusterRegionSize;
+
+    // Find which items belong to this cluster
+    for(let i = 0u; i &lt; arrayLength(items); i++) {
+        let item = items[i];
+        
+        if(item.max.x &lt; cluster.min.x || item.max.y &lt; cluster.min.y || item.max.z &lt; cluster.min.z ||
+           item.min.x &gt; cluster.max.x || item.min.y &gt; cluster.max.y || item.min.z &gt; cluster.max.z) {
+               continue;
+           }
+
+        targetCluster[targetCluster.count] = i;
+        targetCluster.count++;
+    }
+}</code></pre>
+</doc-codeblock></div>
+<div class="flex mb-6">
+    <div class="shrink-0 w-1.5 rounded-tl-lg rounded-bl-lg bg-callout-primary"></div>
+    <div class="flex w-full py-4 border border-l-0 rounded-tr-lg rounded-br-lg doc-callout bg-callout-base-bg border-callout-base-border" role="alert">
+        <div class="flex items-center ml-4 h-7">
+            <svg xmlns="http://www.w3.org/2000/svg" class="block text-callout-primary" width="22" height="22" viewBox="0 0 24 24" role="presentation">
+                <g fill="currentColor"><g>
+                    <path d="M12 1C5.93 1 1 5.93 1 12s4.93 11 11 11 11-4.93 11-11S18.07 1 12 1zm0 20c-4.96 0-9-4.04-9-9s4.04-9 9-9 9 4.04 9 9-4.04 9-9 9z"></path>
+                    <path d="M12 11c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1s1-.45 1-1v-4c0-.55-.45-1-1-1zM12.01 7c-.56 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"></path>
+                    <path fill="none" d="M0 0h24v24H0z"></path>
+                </g></g>
+            </svg>
+        </div>
+        <div class="pr-5 ml-3 w-full">
+<p>All cascades should be updated before any real drawing happens, but for performance reasons we might consider to only update one cascade a frame. This would make lights look like they&#x27;re running at <code translate="no" v-pre>fps / cascadeCount</code> frames per second, which clearly isn&#x27;t ideal. Instead, we update the inner-most cascade every frame, and then amortize the rest of the cascades over <code translate="no" v-pre>cascadeCount - 1</code> frames.</p>
+<p>In the final output, all cascades are always updated every frame.</p>
+        </div>
+    </div>
+</div>
+<h2 id="sampling-the-clusters">Sampling the clusters</h2>
+<p>Given some world position <span class="math">position</span>, we want to get the specific cluster to sample and iterate the items of. To do this, we first need to know the smallest cascade we are contained within is.</p>
+<p>Each cascade has extents which are two times larger than the one before it. This means that on each axis, each cascade&#x27;s &quot;shell&quot; reaches twice as far as the one before it. Let <span class="math">maxAxis</span> be the maximum axis of <span class="math">|position - clustersOrigin|</span>, which provides a distance that can be used to figure out which shell we are within. <span class="math">\lfloor\sqrt\frac{maxAxis}{2}\rfloor</span> then provides the index of the shell to sample.</p>
+<div id="sampling-the-clusters-finding-the-appropriate-cascade-index" class="codeblock-wrapper"><doc-codeblock>
+<div class="codeblock-title">Finding the appropriate cascade index</div>
+<pre translate="no" class="language-wgsl"><code v-pre class="language-wgsl">let cascadesCenter: vec3f;
+
+fn getCascadeIndex(position: vec3f) -&gt; u32 {
+    let smallestCascadeRegionSize = cascaces[0].max - cascades[0].min;
+    let localPosition = (position - cascadesCenter) / smallestCascadeRegionSize;
+    let absPosition = abs(localPosition);
+    let maxAxis = max(absPosition.x, absPosition.y, absPosition.z);
+    return u32(floor(sqrt(maxAxis)));
+}</code></pre>
+</doc-codeblock></div>
+<p>This function should always provide the smallest cascade that <span class="math">position</span> is contained within. If the result is greater than the number of cascades minus 1, then you are beyond the bounds of the cascades and should not be sampling from clusters.</p>
+<p>With that, we can sample the clusters of the cascade using this function:</p>
+<div id="sampling-the-clusters-getting-the-cluster-from-a-world-space-position" class="codeblock-wrapper"><doc-codeblock>
+<div class="codeblock-title">Getting the cluster from a world-space position</div>
+<pre translate="no" class="language-wgsl"><code v-pre class="language-wgsl">...
+
+fn getClusterIndex(cascadeIndex: u32, position: vec3f) -&gt; u32 {
+    let slice = getClustersSlice(cascadeIndex);
+
+    let cascade = cascades[cascadeIndex];
+    let uvw = (position - cascade.min) / (cascade.max - cascade.min);
+    let clusterOffset = vec3&lt;u32&gt;(floor(uvw * vec3f(cascadeSize)));
+    let clusterIndex = clusterOffsetToIndex(clusterOffset);
+    
+    return clustersSliceStart + clusterIndex;
+}</code></pre>
+</doc-codeblock></div>
 <hr>
 <h2 id="global-illumination">Global Illumination</h2>
 <h2 id="features">Features</h2>
 <p>An overview of the rendering features that are planned or available in Cinebara.</p>
-<h3 id="pbr">PBR</h3>
+<hr>
+<h1 id="pbr">PBR</h1>
+<p>We follow the <a href="https://academysoftwarefoundation.github.io/OpenPBR/">OpenPBR standard</a> with a few modifications. Let&#x27;s go over the primary structure that makes up the pbr workflow.</p>
+<p>A PBR material may have an arbitrary number of layers, each layer defines some special rendering technique and the layers may be blended to achieve emulation of micro-details, like fine scratches on metal providing additional specular highlights.</p>
+<hr>
 <h3 id="raytracing">Raytracing</h3>
 <h3 id="volumetrics">Volumetrics</h3>
 
@@ -520,20 +635,20 @@ fn getClusterIndex(cascade: ClusterCascade, position: vec3f) -&gt; u32 {
             
                 <nav id="retype-nextprev" class="print:hidden flex mt-14">
                     <div class="w-1/2">
-                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-body-link border border-base-border hover:border-base-border-hover rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../interface/">
+                        <a class="px-5 py-4 h-full flex items-center break-normal font-medium text-body-link border border-base-border hover:border-base-border-hover rounded-l-lg transition-colors duration-150 relative hover:z-5" href="../">
                             <svg xmlns="http://www.w3.org/2000/svg" class="mr-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19 11H7.41l5.29-5.29a.996.996 0 10-1.41-1.41l-7 7a1 1 0 000 1.42l7 7a1.024 1.024 0 001.42-.01.996.996 0 000-1.41L7.41 13H19c.55 0 1-.45 1-1s-.45-1-1-1z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
                             <span>
                                 <span class="block text-xs font-normal text-base-text-muted">Previous</span>
-                                <span class="block mt-1">Interface</span>
+                                <span class="block mt-1">Welcome</span>
                             </span>
                         </a>
                     </div>
             
                     <div class="w-1/2">
-                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-body-link border border-base-border hover:border-base-border-hover rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../security/">
+                        <a class="px-5 py-4 -mx-px h-full flex items-center justify-end break-normal font-medium text-body-link border border-base-border hover:border-base-border-hover rounded-r-lg transition-colors duration-150 relative hover:z-5" href="../rendering/mesh_skinning/">
                             <span>
                                 <span class="block text-xs font-normal text-right text-base-text-muted">Next</span>
-                                <span class="block mt-1">Security</span>
+                                <span class="block mt-1">Mesh Skinning</span>
                             </span>
                             <svg xmlns="http://www.w3.org/2000/svg" class="ml-3" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" overflow="visible"><path d="M19.92 12.38a1 1 0 00-.22-1.09l-7-7a.996.996 0 10-1.41 1.41l5.3 5.3H5c-.55 0-1 .45-1 1s.45 1 1 1h11.59l-5.29 5.29a.996.996 0 000 1.41c.19.2.44.3.7.3s.51-.1.71-.29l7-7c.09-.09.16-.21.21-.33z" /><path fill="none" d="M0 0h24v24H0z" /></svg>
                         </a>
@@ -577,6 +692,6 @@ fn getClusterIndex(cascade: ClusterCascade, position: vec3f) -&gt; u32 {
 
     <div id="retype-overlay-target"></div>
 
-        <script data-cfasync="false">window.__DOCS__ = { "title": "Rendering", level: 1, icon: "file", hasPrism: true, hasInstagram: false, hasMermaid: true, hasMath: false, tocDepth: 23, "md": "/rendering/rendering.md" }</script>
+        <script data-cfasync="false">window.__DOCS__ = { "title": "Rendering", level: 1, icon: "file", hasPrism: true, hasInstagram: false, hasMermaid: true, hasMath: true, tocDepth: 23, "md": "/rendering/rendering.md" }</script>
 </body>
 </html>
